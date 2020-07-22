@@ -9,6 +9,7 @@
 <script>
 import AuthLayout from "@/layouts/AuthLayout";
 import MainLayout from "@/layouts/MainLayout";
+import FullLayout from "@/layouts/FullLayout";
 
 export default {
   computed: {
@@ -18,7 +19,8 @@ export default {
   },
   components: {
     AuthLayout,
-    MainLayout
+    MainLayout,
+    FullLayout
   }
 };
 </script>

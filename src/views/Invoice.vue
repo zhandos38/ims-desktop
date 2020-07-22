@@ -2,7 +2,7 @@
   <div>
     <Loader v-if="loading" />
     <div class="app-container" v-else>
-      <button class="btn btn-success">Добавить накладную</button>
+      <router-link class="btn btn-success" to="/invoice-create">Добавить накладную</router-link>
       <div><small>Всего записей: {{ dataProvider.totalItems }}</small></div>
       <table class="table table-bordered">
         <thead>

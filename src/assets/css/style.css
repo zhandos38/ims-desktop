@@ -21,6 +21,33 @@ label {
     color: #fff;
 }
 
+.form-control {
+    border: 2px #777 solid;
+    height: 45px;
+    font-size: 15px;
+    border-radius: 6px;
+    background: #2a303b;
+    color: #fff;
+}
+.form-control:focus {
+    color: #fff;
+    background: #2a303b;
+}
+
+.number-input {
+    width: 100%;
+}
+.number-input__input {
+    width: 100% !important;
+    text-align: center;
+}
+
+.wrap {
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 20px 30px 80px;
+}
+
 .has-error .form-control {
     box-shadow: 0 0 8px rgba(169, 68, 66, 1);
 }

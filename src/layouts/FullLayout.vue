@@ -4,7 +4,7 @@
     <div v-else>
       <Navbar />
       <div class="wrap">
-        <div class="container">
+        <div class="container-fluid">
           <router-view />
         </div>
       </div>
@@ -17,7 +17,7 @@ import Navbar from "@/components/app/Navbar";
 import messages from "../utils/messages";
 
 export default {
-  name: "MainLayout",
+  name: "FullLayout",
   data: () => ({
     loading: true
   }),
