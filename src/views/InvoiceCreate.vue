@@ -37,7 +37,7 @@
               </div>
               <button
                 class="btn btn-info"
-                style="margin-top: 28px; height: fit-content; padding: 10px 15px;"
+                style="margin-top: 30px; height: fit-content; padding: 10px 15px;"
                 @click="showCreateSupplierModal = true"
                 data-toggle="tooltip"
                 title="Добавить поставщика"
@@ -203,35 +203,37 @@
                 </div>
               </div>
               <div class="col-md-2">
-                <button
-                  type="submit"
-                  class="invoice-create-btn btn btn-info"
-                  @click="setProduct"
-                  :class="isSaveBtnDisabled ? 'block-disabled' : ''"
-                  data-target="tooltip"
-                  title="Добавить товар в накладную"
-                  tabindex="-1"
-                >
-                  <i class="fas fa-arrow-right"></i>
-                </button>
-                <button
-                  class="invoice-create-btn btn btn-info"
-                  @click="resetForm"
-                  data-target="tooltip"
-                  title="Обновить список"
-                  tabindex="-1"
-                >
-                  <i class="fas fa-sync"></i>
-                </button>
-                <button
-                  class="invoice-create-btn btn btn-success"
-                  @click="productCreateModalShow = true"
-                  data-target="tooltip"
-                  title="Добавить новый товар на склад"
-                  tabindex="-1"
-                >
-                  <i class="fas fa-plus"></i>
-                </button>
+                <div class="invoice-btn-group">
+                  <button
+                    type="submit"
+                    class="invoice-create-btn btn btn-info"
+                    @click="setProduct"
+                    :class="isSaveBtnDisabled ? 'block-disabled' : ''"
+                    data-target="tooltip"
+                    title="Добавить товар в накладную"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                  <button
+                    class="invoice-create-btn btn btn-info"
+                    @click="resetForm"
+                    data-target="tooltip"
+                    title="Обновить список"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-sync"></i>
+                  </button>
+                  <button
+                    class="invoice-create-btn btn btn-success"
+                    @click="productCreateModalShow = true"
+                    data-target="tooltip"
+                    title="Добавить новый товар на склад"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -574,30 +576,9 @@ export default {
       this.input = input.target.value;
     },
 
-    getSuppliers() {
-      console.log("Suppliers list");
-      // $.get({
-      //   url: "/invoice/get-suppliers",
-      //   format: "JSON",
-      //   success: result => {
-      //     this.suppliers = [
-      //       {
-      //         id: null,
-      //         name: "Выберите поставщика"
-      //       }
-      //     ];
-      //     result.forEach(item => {
-      //       this.suppliers.push({
-      //         id: item["id"],
-      //         name: item["name"]
-      //       });
-      //     });
-      //     console.log(this.suppliers);
-      //   },
-      //   error: function() {
-      //     console.log("Get supplier error!");
-      //   }
-      // });
+    async getSuppliers() {
+      await this.$store.dispatch("getSuppliers");
+      this.suppliers = this.$store.state.supplier.list;
     },
     resetForm() {
       this.productId = null;
@@ -1030,8 +1011,8 @@ export default {
       this.productCreatePieceBoxActive = 0;
     }
   },
-  mounted() {
-    this.getSuppliers();
+  async mounted() {
+    await this.getSuppliers();
 
     this.loading = false;
   }
@@ -1057,5 +1038,9 @@ table {
 .invoice-submit-btn {
   margin-top: 20px;
   width: 100%;
+}
+
+.invoice-btn-group {
+  padding-top: 32px;
 }
 </style>

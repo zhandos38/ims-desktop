@@ -1,9 +1,9 @@
-const Sequelize = require('sequelize')
+const Sequelize = require("sequelize");
 
-const db = {}
-const sequelize = new Sequelize('cash_db', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
+const db = {};
+const sequelize = new Sequelize("cash_db", "root", "", {
+  host: "localhost",
+  dialect: "mysql",
 
   pool: {
     max: 5,
@@ -14,9 +14,9 @@ const sequelize = new Sequelize('cash_db', 'root', '', {
   define: {
     freezeTableName: true
   }
-})
+});
 
-db.sequelize = sequelize
-db.Sequelize = Sequelize
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-module.exports = db
+module.exports = db;

@@ -1,22 +1,22 @@
-const Sequelize = require('sequelize')
-const db = require('../database')
+const Sequelize = require("sequelize");
+const db = require("../database");
 
 module.exports = db.sequelize.define(
-    'supplier',
-    {
-      id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      name: {
-        type: Sequelize.STRING,
-      },
-      created_at: {
-        type: Sequelize.INTEGER
-      }
+  "supplier",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
-    {
-      timestamps: false,
+    name: {
+      type: Sequelize.STRING
+    },
+    created_at: {
+      type: Sequelize.INTEGER
     }
-)
+  },
+  {
+    timestamps: false
+  }
+);
