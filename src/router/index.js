@@ -32,6 +32,11 @@ const routes = [
     name: "invoice-create",
     meta: { layout: "full" },
     component: () => import("@/views/InvoiceCreate.vue")
+  },
+  {
+    path: "/supplier",
+    name: "supplier",
+    component: () => import("@/views/Supplier.vue")
   }
 ];
 

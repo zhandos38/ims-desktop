@@ -12,6 +12,9 @@ module.exports = db.sequelize.define(
     name: {
       type: Sequelize.STRING
     },
+    phone: {
+      type: Sequelize.STRING
+    },
     created_at: {
       type: Sequelize.INTEGER
     }

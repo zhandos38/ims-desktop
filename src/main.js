@@ -11,14 +11,13 @@ import "bootstrap/dist/js/bootstrap.min";
 import "vue-toast-notification/dist/theme-default.css";
 import VueNumberInput from "@chenfengyuan/vue-number-input";
 import VueMask from "v-mask";
+import { VueMaskFilter } from 'v-mask';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueNumberInput);
 Vue.use(Vuelidate);
 Vue.use(VueMask);
-Vue.filter("date", dateFilter);
-
 Vue.use(VueToast, {
   position: "top-right"
 });
@@ -26,6 +25,8 @@ Vue.use(VueToast, {
 Vue.component("Loader", Loader);
 Vue.component("Paginate", Paginate);
 
+Vue.filter("date", dateFilter);
+Vue.filter("VMask", VueMaskFilter);
 Vue.filter("number", value => value.toFixed(2));
 
 new Vue({
