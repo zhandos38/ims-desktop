@@ -113,6 +113,19 @@ label {
     position: relative;
 }
 
+.app-container__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.autocomplete-input {
+    padding: 8px 12px 8px 48px;
+}
+.autocomplete-result {
+    color: #000;
+}
+
 .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
     border: 1px solid #2A303B !important;
 }

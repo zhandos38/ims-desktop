@@ -2,16 +2,17 @@
   <div>
     <Loader v-if="loading" />
     <div class="app-container" v-else>
-      <router-link class="btn btn-success" to="/invoice-create"
-        >Добавить накладную</router-link
-      >
+      <div class="app-container__header">
+        <router-link class="btn btn-info" to="/">Назад</router-link>
+        <router-link class="btn btn-success" to="/invoice-create">Добавить накладную</router-link>
+      </div>
       <div>
         <small>Всего записей: {{ dataProvider.totalItems }}</small>
       </div>
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>#</th>
             <th>Номер входа</th>
             <th>Поставщик</th>
             <th>Под реал</th>
@@ -21,8 +22,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="record in dataProvider.records" v-bind:key="record.id">
-            <td>{{ record.id }}</td>
+          <tr v-for="(record, index) in dataProvider.records" v-bind:key="record.id">
+            <td>{{ ((page - 1) * pageSize) + ++index }}</td>
             <td>{{ record.number_in }}</td>
             <td>{{ record.supplier_name }}</td>
             <td>{{ record.is_debt ? "Да" : "Нет" }}</td>

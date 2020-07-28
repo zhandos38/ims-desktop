@@ -23,7 +23,7 @@ router.post("/login", (req, res) => {
   })
     .then(user => {
       if (!user) {
-        return res.status("404").send("invalid username or password");
+        res.status("404").send("invalid username or password");
       }
 
       // bcrypt.compare(password, user.password_hash, function (err, result) {

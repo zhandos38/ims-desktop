@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export default {
   actions: {
     async fetchSuppliers({ commit }, { page = 0, pageSize = 20 }) {
@@ -15,6 +17,24 @@ export default {
       ).json();
 
       commit("setList", data);
+    },
+    async createSupplier({ commit }, { name, phone }) {
+      try {
+        await axios
+          .post("http://localhost:4040/supplier/create", {
+            name: name,
+            phone: phone
+          })
+          .then((response) => {
+            this._vm.$toast.open("Поставщик успешно создан");
+          })
+          .catch(error => {
+            this._vm.$toast.open("Произошло ошибка, обратитесь в службу поддержки");
+            throw error;
+          });
+      } catch (e) {
+        throw e;
+      }
     }
   },
   mutations: {

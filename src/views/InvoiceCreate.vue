@@ -2,8 +2,11 @@
   <div>
     <Loader v-if="loading" />
     <div class="app-container" v-else>
+      <div class="app-container__header">
+        <router-link class="btn btn-info" to="/invoice">Назад</router-link>
+      </div>
       <div class="invoice-create__item">
-        <h1>Добавить накладную</h1>
+        <h2>Добавить накладную</h2>
 
         <div class="row">
           <div class="col-md-3">
@@ -26,6 +29,9 @@
                   v-model="selectedSupplier"
                   class="form-control"
                 >
+                  <option value="null">
+                    Выберите поставщика
+                  </option>
                   <option
                     v-for="supplier in suppliers"
                     :value="supplier.id"
@@ -38,7 +44,7 @@
               <button
                 class="btn btn-info"
                 style="margin-top: 30px; height: fit-content; padding: 10px 15px;"
-                @click="showCreateSupplierModal = true"
+                @click="showSupplierModal = true"
                 data-toggle="tooltip"
                 title="Добавить поставщика"
               >
@@ -98,87 +104,43 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="product-barcode">Штрихкод</label>
-                  <input
+                  <autocomplete
                     id="product-barcode"
-                    type="text"
-                    v-model="productBarcode"
-                    class="form-control"
                     :class="isProductBarcodeDisabled ? 'block-disabled' : ''"
-                    @input="searchProductByBarcode($event.target.value)"
-                    @focusin="showSuggestProductBarcode = true"
-                    :disabled="isProductBarcodeDisabled"
-                  />
-                  <ul class="suggest-list" v-show="showSuggestProductBarcode">
-                    <li
-                      class="suggest-list__item"
-                      v-for="suggestProduct in suggestProductsBarcode"
-                      v-bind:key="suggestProduct.id"
-                      @click="
-                        selectProduct(suggestProduct.id);
-                        showSuggestProductBarcode = false;
-                      "
-                    >
-                      {{ suggestProduct.barcode }}
-                    </li>
-                  </ul>
+                    :search="searchProductByBarcode"
+                    :get-result-value="getResultValueBarcode"
+                    @submit="searchProductByBarcodeSubmitHandler"
+                    :debounce-time="500"
+                  >
+                  </autocomplete>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group" style="position: relative">
                   <label for="product-name">Наименование товара</label>
-                  <input
+                  <autocomplete
                     id="product-name"
-                    type="text"
-                    v-model="productName"
-                    class="form-control"
                     :class="isProductNameDisabled ? 'block-disabled' : ''"
-                    @input="searchProductByName($event.target.value)"
-                    @focusin="showSuggestProductName = true"
-                    :disabled="isProductNameDisabled"
-                  />
-                  <ul class="suggest-list" v-show="showSuggestProductName">
-                    <li
-                      class="suggest-list__item"
-                      v-for="suggestProduct in suggestProductsName"
-                      v-bind:key="suggestProduct.id"
-                      @click="
-                        selectProduct(suggestProduct.id);
-                        showSuggestProductName = false;
-                      "
-                    >
-                      {{ suggestProduct.name }}
-                    </li>
-                  </ul>
+                    :search="searchProductByName"
+                    :get-result-value="getResultValueName"
+                    @submit="searchProductByNameSubmitHandler"
+                    :debounce-time="500"
+                  >
+                  </autocomplete>
                 </div>
               </div>
               <div class="col-md-2">
                 <div class="form-group">
-                  <label for="product-qty" style="display: block;"
-                    >Количество ({{
-                      isQtyPartial ? "Делимый" : "Цельный"
-                    }})</label
-                  >
+                  <label style="display: block;">
+                    Количество ({{ isQtyPartial ? "Делимый" : "Цельный" }})
+                  </label>
                   <number-input
-                    ref="productQty"
-                    v-if="!isQtyPartial"
-                    id="product-qty"
+                    ref="product.qty"
                     class="number-input"
-                    v-model="productQty"
-                    :min="1"
+                    v-model="product.qty"
+                    :min="isQtyPartial ? 1 : 0.1"
                     :max="9999"
-                    :step="1"
-                    inline
-                    controls
-                  ></number-input>
-                  <number-input
-                    ref="productQty"
-                    v-else-if="isQtyPartial"
-                    id="product-qty"
-                    class="number-input"
-                    v-model="productQty"
-                    :min="0.1"
-                    :max="9999"
-                    :step="0.1"
+                    :step="isQtyPartial ? 1 : 0.1"
                     inline
                     controls
                   ></number-input>
@@ -197,7 +159,7 @@
                   <input
                     id="product-price"
                     type="number"
-                    v-model="productPrice"
+                    v-model="product.price"
                     class="form-control"
                   />
                 </div>
@@ -273,48 +235,6 @@
           </div>
         </div>
       </div>
-      <!-- Create supplier modal start -->
-      <div
-        class="create-supplier-modal__wrapper text-center"
-        v-show="showCreateSupplierModal"
-      >
-        <div class="create-supplier-modal">
-          <div
-            class="create-supplier-modal__close pull-right"
-            @click="showCreateSupplierModal = false"
-          >
-            <i class="fas fa-times"></i>
-          </div>
-          <div class="create-supplier-modal__container">
-            <h1>Создание поставщика</h1>
-            <div class="row">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Введите наименование"
-                v-model="supplierName"
-              />
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Введите номер телефона"
-                v-model="supplierPhone"
-                v-mask="'7(###)###-##-##'"
-              />
-              <button
-                class="btn btn-success"
-                style="margin-top: 20px"
-                @click="createSupplier"
-                data-target="tooltip"
-                title="Создать поставщика"
-              >
-                Создать поставщика
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Create supplier modal end -->
       <!-- Create product modal start -->
       <div
         class="create-product-modal__wrapper"
@@ -480,10 +400,15 @@
       </div>
       <!-- Create product modal end -->
     </div>
+    <SupplierModal v-if="showSupplierModal" @close="showSupplierModal = false" />
   </div>
 </template>
 
 <script>
+import Autocomplete from '@trevoreyre/autocomplete-vue';
+import '@trevoreyre/autocomplete-vue/dist/style.css';
+import SupplierModal from "@/components/SupplierModal";
+
 export default {
   name: "InvoiceCreate",
   computed: {
@@ -492,6 +417,10 @@ export default {
         return total + item.price * item.qty;
       }, 0);
     }
+  },
+  components: {
+    SupplierModal,
+    Autocomplete
   },
   data: () => ({
     loading: true,
@@ -507,43 +436,25 @@ export default {
     isInit: false,
     debtSum: 0,
     products: [],
-    productId: null,
-    productBarcode: null,
-    productName: null,
+    suggestProducts: [],
+    product: {
+      id: null,
+      name: null,
+      barcode: null,
+      piece_quantity: null,
+      qty: null,
+      price: null,
+      unit: null
+    },
     isProductNameDisabled: false,
     isProductBarcodeDisabled: false,
-    productQty: null,
     isQtyPartial: false,
     isQtyPiece: false,
     partialQty: 0,
-    productPartialQuantity: 0,
-    productPrice: null,
-    productUnit: null,
     showSuggestProductName: false,
     showSuggestProductBarcode: false,
     isSaveBtnDisabled: false,
-    suggestProductsName: [
-      {
-        id: null,
-        name: null
-      }
-    ],
-    suggestProductsBarcode: [
-      {
-        id: null,
-        barcode: null
-      }
-    ],
-    showCreateSupplierModal: false,
-    visible: false,
-    layout: "russian",
-    input: null,
-    options: {
-      useKbEvents: false
-    },
-    supplierName: null,
-    supplierPhone: null,
-    errors: [],
+    showSupplierModal: false,
     productCreateModalShow: false,
     productCreateName: null,
     productCreateBarcode: null,
@@ -575,149 +486,77 @@ export default {
     onInputChange(input) {
       this.input = input.target.value;
     },
-
     async getSuppliers() {
       await this.$store.dispatch("getSuppliers");
       this.suppliers = this.$store.state.supplier.list;
     },
     resetForm() {
-      this.productId = null;
-      this.productBarcode = null;
-      this.productName = null;
-      this.productQty = null;
-      this.productPrice = null;
+      this.product = {
+        id: null,
+        name: null,
+        barcode: null,
+        piece_quantity: null,
+        qty: null,
+        price: null,
+        unit: null
+      }
+
       this.isProductNameDisabled = false;
       this.isProductBarcodeDisabled = false;
       this.isQtyPartial = false;
       this.isQtyPiece = false;
+    },
+    async searchProductByBarcode(term) {
+      if (term.length < 1) { return [] }
 
-      this.hideAlert();
+      await this.$store.dispatch('getProductsByBarcode', {term: term});
+      return this.suggestProducts = this.$store.state.product.suggestByBarcode;
     },
-    searchProductByName(term = "") {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        this.suggestProductsName = [];
-        if (term != null && term !== "") {
-          // $.get({
-          //   url: "/product/search-by-name",
-          //   data: { term: term }
-          // }).done(result => {
-          //   console.log("Searching result: ", result);
-          //   result.forEach(item => {
-          //     this.suggestProductsName.push({
-          //       id: item["id"],
-          //       name: item["name"]
-          //     });
-          //   });
-          // });
-        }
-      }, 1000);
+    getResultValueBarcode(result) {
+      return result.barcode;
     },
-    searchProductByBarcode(term = "") {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        if (term != null && term !== "") {
-          this.suggestProductsBarcode = [];
-          // $.get({
-          //   url: "/product/search-by-barcode",
-          //   data: { term: term }
-          // }).done(result => {
-          //   console.log("Searching result: ", result);
-          //   result.forEach(item => {
-          //     this.suggestProductsBarcode.push({
-          //       id: item["id"],
-          //       barcode: item["barcode"]
-          //     });
-          //   });
-          // });
-        }
-      }, 1000);
+    searchProductByBarcodeSubmitHandler(result) {
+      this.selectFoundProduct(result);
     },
-    getProductByBarcode(barcode) {
-      console.log(barcode);
-      // $.get({
-      //   url: "/product/get-product-by-barcode",
-      //   form: "JSON",
-      //   data: { barcode: barcode },
-      //   success: result => {
-      //     console.log(result);
-      //     if (!result) {
-      //       callAjaxAlert(false, "Товар не найден в базе!");
-      //       this.productBarcode = barcode;
-      //       $("#product-name").focus();
-      //       return;
-      //     }
-      //     this.selectFoundProduct(result);
-      //     $("#product-qty").focus();
-      //   },
-      //   error: function() {
-      //     console.log("Get product error!");
-      //   }
-      // });
+    async searchProductByName(term) {
+      if (term.length < 1) { return [] }
+
+      await this.$store.dispatch('getProductsByName', {term: term});
+      return this.suggestProducts = this.$store.state.product.suggestByBarcode;
     },
-    selectProduct(id) {
-      // $.get({
-      //   url: "/product/get-product-by-id",
-      //   form: "JSON",
-      //   data: { id: id },
-      //   success: result => {
-      //     console.log(result);
-      //     if (!result) {
-      //       callAjaxAlert(
-      //         false,
-      //         "Возникала ошибка! Товар не наиден в базе, пожалуйста обратитесь к тех поддержке"
-      //       );
-      //       return false;
-      //     }
-      //     this.selectFoundProduct(result);
-      //   },
-      //   error: function() {
-      //     console.log("Get product error!");
-      //   }
-      // });
+    getResultValueName(result) {
+      return result.name;
+    },
+    searchProductByNameSubmitHandler(result) {
+      this.selectFoundProduct(result);
     },
     selectFoundProduct(product) {
-      this.productId = product["id"];
-      this.productBarcode = product["barcode"];
-      this.productName = product["name"];
-      this.productPartialQuantity = parseInt(product["piece_quantity"]);
+      this.product.id = product.id;
+      this.product.barcode = product.barcode;
+      this.product.name = product.name;
+      this.product.piece_quantity = parseInt(product.piece_quantity);
 
       this.isProductNameDisabled = true;
       this.isProductBarcodeDisabled = true;
 
-      if (parseInt(product["type"]) === 1) {
+      if (parseInt(product.type) === 1) {
         this.isQtyPartial = true;
       }
 
-      if (parseInt(product["is_piece"]) === 1) {
+      if (parseInt(product.is_piece) === 1) {
         this.isQtyPiece = true;
       }
     },
 
     setProduct() {
       let flag = true;
-      // if (!this.productId) {
-      //   callAjaxAlert(false, "Товар в базе не найден!");
-      //   return;
-      // }
 
-      if (
-        !this.productName ||
-        !this.productBarcode ||
-        !this.productQty ||
-        !this.productPrice
-      ) {
-        // callAjaxAlert(false, "Нужно заполнить все поля!");
-        return;
-      }
-
-      console.log(this.productId);
+      console.log(this.product.id);
       this.products.forEach(item => {
         console.log(item.id);
-        if (item.id === this.productId) {
+        if (item.id === this.product.id) {
           // callAjaxAlert(false, "Данный товар уже существует!");
           flag = false;
-          return;
         }
       });
 
@@ -725,30 +564,26 @@ export default {
         return;
       }
 
-      if (this.isQtyPartial) {
-        this.partialQty = parseInt(this.partialQty);
-        this.productQty =
-          this.productQty +
-          Math.floor(this.partialQty / this.productPartialQuantity) +
-          (this.partialQty % this.productPartialQuantity) / 1000;
-      }
+      // if (this.isQtyPartial) {
+      //   this.partial.qty = parseInt(this.partial.qty);
+      //   this.product.qty =
+      //     this.product.qty +
+      //     Math.floor(this.partialQty / this.product.partial_quantity) +
+      //     (this.partialQty % this.product.partial_quantity) / 1000;
+      // }
 
       this.products.push({
-        id: this.productId,
-        name: this.productName,
-        barcode: this.productBarcode,
-        qty: this.productQty,
-        price: this.productPrice
+        id: this.product.id,
+        name: this.product.name,
+        barcode: this.product.barcode,
+        qty: this.product.qty,
+        price: this.product.price
       });
 
       this.products = this.products.slice().reverse();
 
-      this.hideAlert();
       this.resetForm();
     },
-    // hideAlert() {
-    //   $("#ajax-alert").hide();
-    // },
     save() {
       this.errors = [];
       // if (this.products.length <= 0)
@@ -838,24 +673,6 @@ export default {
     closeAllSuggestList() {
       this.suggestProductsName = [];
       this.suggestProductsBarcode = [];
-    },
-    createSupplier() {
-      // $.post({
-      //   url: "/supplier/create-ajax",
-      //   data: { name: this.supplierName, phone: this.supplierPhone },
-      //   format: "JSON",
-      //   success: result => {
-      //     console.log(result);
-      //     callAjaxAlert(true, "Поставщик успешно сохранен");
-      //     this.supplierName = false;
-      //     this.supplierPhone = false;
-      //     this.showCreateSupplierModal = false;
-      //     this.getSuppliers();
-      //   },
-      //   error: function() {
-      //     console.log("Error!");
-      //   }
-      // });
     },
     generateBarcode() {
       // $.post({

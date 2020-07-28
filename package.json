@@ -15,6 +15,7 @@
   "dependencies": {
     "@chenfengyuan/vue-number-input": "^1.2.1",
     "@fortawesome/fontawesome-free": "^5.13.1",
+    "@trevoreyre/autocomplete-vue": "^2.2.0",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

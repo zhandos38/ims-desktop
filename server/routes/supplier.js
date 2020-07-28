@@ -21,12 +21,24 @@ router.get("/", (req, res) => {
 
 router.get("/list", (req, res) => {
   Supplier.findAll()
-    .then(invoice => {
-      res.json(invoice);
+    .then(suppliers => {
+      res.json(suppliers);
     })
     .catch(err => {
       res.send("error: " + err);
     });
+});
+
+router.post("/create", async (req, res) => {
+    const { name, phone } = req.body;
+
+    try {
+        const supplier = await Supplier.create({ name: name, phone: phone, created_at: Date.now() / 1000 });
+        await supplier.save();
+        res.status("200").send("Ok");
+    } catch (err) {
+        res.status("500").send("error: " + err);
+    }
 });
 
 module.exports = router;
