@@ -112,7 +112,7 @@
                                 id="quantity-wholesale"
                                 type="number"
                                 class="form-control"
-                                v-model="quantityWholesale"
+                                v-model="wholesaleQuantity"
                                 placeholder="Введите оптовое количество"
                         />
                     </div>
@@ -136,11 +136,11 @@
                                     Цена за единицу
                                 </label>
                                 <input
-                                        id="piece-price"
-                                        type="number"
-                                        v-model="piecePrice"
-                                        class="form-control"
-                                        placeholder="Введите цену за единицу"
+                                    id="piece-price"
+                                    type="number"
+                                    v-model="piecePrice"
+                                    class="form-control"
+                                    placeholder="Введите цену за единицу"
                                 />
                             </div>
                         </div>
@@ -150,11 +150,11 @@
                                     Количество в упаковке
                                 </label>
                                 <input
-                                        id="piece-quantity"
-                                        type="number"
-                                        v-model="pieceQuantity"
-                                        class="form-control"
-                                        placeholder="Введите количество в упаковке"
+                                    id="piece-quantity"
+                                    type="number"
+                                    v-model="pieceQuantity"
+                                    class="form-control"
+                                    placeholder="Введите количество в упаковке"
                                 />
                             </div>
                         </div>
@@ -209,7 +209,7 @@
             isNew: true,
             priceRetail: null,
             priceWholesale: null,
-            quantityWholesale: null,
+            wholesaleQuantity: null,
             isPiece: null,
             piecePrice: null,
             pieceQuantity: null,
@@ -327,47 +327,27 @@
             },
 
             createProduct() {
-                console.log(this.isPiece);
                 if (
                     !this.name ||
                     !this.barcode ||
                     !this.unit ||
                     !this.priceRetail
                 ) {
-                    // this.productCreateAlertShow("Заполните все поля!");
-
+                    this.$toast.warning("Заполните все поля!");
                 }
 
-                // $.post({
-                //   url: "/product/create",
-                //   data: {
-                //     barcode: this.productCreateBarcode,
-                //     name: this.productCreateName,
-                //     unit: this.productCreateUnit,
-                //     isPartial: this.productCreateIsPartial,
-                //     isNew: this.productCreateIsNew,
-                //     priceRetail: this.productCreatePriceRetail,
-                //     priceWholesale: this.productCreatePriceWholesale,
-                //     quantityWholesale: this.productCreateQuantityWholesale,
-                //     isPiece: this.productCreateIsPiece,
-                //     piecePrice: this.productCreatePiecePrice,
-                //     pieceQuantity: this.productCreatePieceQuantity
-                //   },
-                //   success: result => {
-                //     console.log(result);
-                //     if (result === "exists") {
-                //       this.productCreateAlertShow("Данный товар уже существует");
-                //       return;
-                //     }
-                //
-                //     this.reloadCreateProduct();
-                //     callAjaxAlert(true, "Товар успешно создан!");
-                //     this.productCreateModalShow = false;
-                //   },
-                //   error: function() {
-                //     console.log("Product create error!");
-                //   }
-                // });
+                this.$store.dispatch('createProduct', {
+                    barcode: this.barcode,
+                    name: this.name,
+                    unit: this.unit,
+                    type: this.type,
+                    price_retail: this.priceRetail,
+                    priceWholesale: this.priceWholesale,
+                    wholesale_quantity: this.wholesaleQuantity,
+                    is_piece: this.isPiece,
+                    piece_price: this.piecePrice,
+                    piece_quantity: this.pieceQuantity
+                });
             },
             showPieceBox() {
                 if (this.isPiece) {
@@ -392,7 +372,7 @@
                 this.isNew = true;
                 this.priceRetail = null;
                 this.priceWholesale = null;
-                this.quantityWholesale = null;
+                this.wholesaleQuantity = null;
                 this.isPiece = 0;
                 this.isPieceBoxActive = 0;
             },

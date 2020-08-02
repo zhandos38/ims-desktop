@@ -18,15 +18,14 @@ export default {
 
       commit("setList", data);
     },
-    async createProduct({ commit }, { name, phone }) {
+    async createProduct({ commit }, { barcode, name, unit, type, price_retail, price_wholesale, wholesale_quantity }) {
       try {
         await axios
-          .post("http://localhost:4040/product/create", {
-            name: name,
-            phone: phone
-          })
+          .post("http://localhost:4040/product/create", [
+              barcode, name, unit, type, price_retail, price_wholesale, wholesale_quantity
+          ])
           .then((response) => {
-            this._vm.$toast.open("Поставщик успешно создан");
+            this._vm.$toast.open("Товар успешно создан");
           })
           .catch(error => {
             this._vm.$toast.open("Произошло ошибка, обратитесь в службу поддержки");
