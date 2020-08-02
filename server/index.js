@@ -7,6 +7,7 @@ const routeUser = require("./routes/user");
 const routeInvoice = require("./routes/invoice");
 const routeSupplier = require("./routes/supplier");
 const routeProduct = require("./routes/product");
+const routeBarcode = require("./routes/barcode");
 
 const app = express();
 const port = 4040;
@@ -20,6 +21,7 @@ app.use("/user", routeUser);
 app.use("/invoice", routeInvoice);
 app.use("/supplier", routeSupplier);
 app.use("/product", routeProduct);
+app.use("/barcode", routeBarcode);
 
 // starting the server
 app.listen(port, () => console.log(`Server started, listening port: ${port}`));

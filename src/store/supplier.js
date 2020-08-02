@@ -18,15 +18,16 @@ export default {
 
       commit("setList", data);
     },
-    async createSupplier({ commit }, { name, phone }) {
+    async createSupplier({ dispatch, commit }, { name, phone }) {
       try {
         await axios
           .post("http://localhost:4040/supplier/create", {
             name: name,
             phone: phone
           })
-          .then((response) => {
+          .then(async (response) => {
             this._vm.$toast.open("Поставщик успешно создан");
+            await dispatch('getSuppliers');
           })
           .catch(error => {
             this._vm.$toast.open("Произошло ошибка, обратитесь в службу поддержки");

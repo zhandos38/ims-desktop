@@ -120,7 +120,7 @@ label {
 }
 
 .autocomplete-input {
-    padding: 8px 12px 8px 48px;
+    padding: 7px 12px 7px 48px !important;
 }
 .autocomplete-result {
     color: #000;
