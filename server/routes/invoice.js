@@ -2,7 +2,7 @@ const express = require("express"),
   router = express.Router(),
   Invoice = require("../models/invoice"),
   { getPagination, getPagingData } = require("../functions"),
-  Sequelize = require("sequelize");
+  db = require('../database');
 
 router.get("/", (req, res) => {
   console.log(req.query);
@@ -22,30 +22,28 @@ router.get("/", (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { invoice, invoiceItems } = req.body;
+  console.log(invoiceItems);
 
-  return Sequelize.transaction(function(t) {
-    return Invoice.create(
-      {
-        ...invoice,
-        created_at: Date.now() / 1000
-      },
-      { transaction: t }
-    )
-      .then(function(invoice) {
-        return invoice.setItems(
-          {
-            ...invoiceItems
-          },
-          { transaction: t }
-        );
-      })
-      .then(function(result) {
-        res.status("200").send("Ok");
-      })
-      .catch(function(err) {
-        res.status("500").send("error: " + err);
-      });
-  });
+    try {
+        await db.sequelize.transaction(async (t) => {
+
+            const invoiceInstant = await Invoice.create(
+                {
+                    ...invoice,
+                    created_at: Date.now() / 1000
+                }, { transaction: t });
+
+            for (const item of invoiceItems) {
+                await invoiceInstant.createItem(
+                    item,
+                    { transaction: t });
+            }
+
+            res.status("200").send("Ok");
+        });
+    } catch (error) {
+        res.status("500").send("error: " + error);
+    }
 });
 
 module.exports = router;

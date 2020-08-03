@@ -34,6 +34,6 @@ const Invoice = db.sequelize.define(
   }
 );
 
-Invoice.hasMany(InvoiceItems, { as: "items", foreignKey: "invoice_id" });
+Invoice.hasMany(InvoiceItems, { as: "item", foreignKey: "invoice_id" });
 
 module.exports = Invoice;

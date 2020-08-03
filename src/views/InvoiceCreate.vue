@@ -443,53 +443,31 @@ export default {
 
       this.addBtnDisabled = false;
 
+      let invoiceItems = this.products.map(function (item) {
+        return {
+          barcode: item.barcode,
+          name: item.name,
+          price_in: item.price,
+          quantity: item.qty
+        };
+      });
+
       this.$store.dispatch("createInvoice", {
         invoice: {
           number_in: this.number,
           is_debt: this.is_debt,
-          supplier_id: this.supplier_id,
+          supplier_id: this.selectedSupplier,
           cost: this.total
         },
-        invoiceItems: this.products
+        invoiceItems: invoiceItems
       });
 
-      // $.post({
-      //   url: "/invoice/create",
-      //   format: "JSON",
-      //   data: {
-      //     number: this.number,
-      //     supplierId: this.selectedSupplier,
-      //     products: this.products,
-      //     totalCost: this.total,
-      //     isDebt: this.isDebt,
-      //     isInit: this.isInit,
-      //     debtSum: this.debtSum,
-      //     isShopMode: new URLSearchParams(window.location.search).get(
-      //       "is_shop_mode"
-      //     )
-      //   },
-      //   success: result => {
-      //     this.submitBtnDisabled = false;
-      //
-      //     this.isDebt = false;
-      //     this.debtSum = null;
-      //
-      //     if (result === "not_enough") {
-      //       callAjaxAlert(false, "Недостаточно средств в кассе!");
-      //       return;
-      //     }
-      //
-      //     this.products = [];
-      //     this.number = null;
-      //     this.selectedSupplier = null;
-      //
-      //     $("#is-init-checkbox").prop("checked", false);
-      //     callAjaxAlert(true, "Накладная успешно сохранена!");
-      //   },
-      //   error: function() {
-      //     console.log("Create invoice error!");
-      //   }
-      // });
+      this.addBtnDisabled = false;
+      this.isDebt = false;
+      this.debtSum = null;
+      this.products = [];
+      this.number = null;
+      this.selectedSupplier = null;
     },
     setDebt() {
       this.addBtnDisabled = !this.isDebt;
