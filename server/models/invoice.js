@@ -1,7 +1,8 @@
-const Sequelize = require("sequelize");
-const db = require("../database");
+const Sequelize = require("sequelize"),
+  db = require("../database"),
+  InvoiceItems = require("./invoiceItems");
 
-module.exports = db.sequelize.define(
+const Invoice = db.sequelize.define(
   "invoice",
   {
     id: {
@@ -32,3 +33,7 @@ module.exports = db.sequelize.define(
     timestamps: false
   }
 );
+
+Invoice.hasMany(InvoiceItems, { as: "items", foreignKey: "invoice_id" });
+
+module.exports = Invoice;

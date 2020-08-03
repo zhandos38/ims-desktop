@@ -15,12 +15,12 @@
                 <div class="form-group">
                   <label for="invoice-number">Входящий номер накладной</label>
                   <input
-                          id="invoice-number"
-                          type="text"
-                          v-model="number"
-                          class="form-control"
-                          @input="onInputChange"
-                          data-layout="russian"
+                    id="invoice-number"
+                    type="text"
+                    v-model="number"
+                    class="form-control"
+                    @input="onInputChange"
+                    data-layout="russian"
                   />
                 </div>
               </div>
@@ -28,27 +28,27 @@
                 <div class="form-group">
                   <label for="invoice-supplier">Поставщик</label>
                   <select
-                          id="invoice-supplier"
-                          v-model="selectedSupplier"
-                          class="form-control"
+                    id="invoice-supplier"
+                    v-model="selectedSupplier"
+                    class="form-control"
                   >
                     <option value="null">
                       Выберите поставщика
                     </option>
                     <option
-                            v-for="supplier in suppliers"
-                            :value="supplier.id"
-                            v-bind:key="supplier.id"
+                      v-for="supplier in suppliers"
+                      :value="supplier.id"
+                      v-bind:key="supplier.id"
                     >
                       {{ supplier.name }}
                     </option>
                   </select>
                 </div>
                 <button
-                        class="btn btn-info supplier-create-btn"
-                        @click="showSupplierModal = true"
-                        data-toggle="tooltip"
-                        title="Добавить поставщика"
+                  class="btn btn-info supplier-create-btn"
+                  @click="showSupplierModal = true"
+                  data-toggle="tooltip"
+                  title="Добавить поставщика"
                 >
                   <i class="fa fa-plus"></i>
                 </button>
@@ -97,7 +97,6 @@
             <button
               class="invoice-submit-btn btn btn-success"
               @click="save"
-              :disabled="submitBtnDisabled"
             >
               Сохранить накладную
             </button>
@@ -180,10 +179,10 @@
                     type="submit"
                     class="invoice-create-btn btn btn-info"
                     @click="setProduct"
-                    :class="isSaveBtnDisabled ? 'block-disabled' : ''"
                     data-target="tooltip"
                     title="Добавить товар в накладную"
                     tabindex="-1"
+                    :disabled="addBtnDisabled"
                   >
                     <i class="fas fa-arrow-right"></i>
                   </button>
@@ -247,13 +246,16 @@
       </div>
     </div>
     <ProductModal v-if="showProductModal" @close="showProductModal = false" />
-    <SupplierModal v-if="showSupplierModal" @close="showSupplierModal = false" />
+    <SupplierModal
+      v-if="showSupplierModal"
+      @close="showSupplierModal = false"
+    />
   </div>
 </template>
 
 <script>
-import Autocomplete from '@trevoreyre/autocomplete-vue';
-import '@trevoreyre/autocomplete-vue/dist/style.css';
+import Autocomplete from "@trevoreyre/autocomplete-vue";
+import "@trevoreyre/autocomplete-vue/dist/style.css";
 import SupplierModal from "@/components/SupplierModal";
 import ProductModal from "@/components/ProductModal";
 
@@ -299,10 +301,9 @@ export default {
     isQtyPartial: false,
     isQtyPiece: false,
     partialQty: 0,
-    isSaveBtnDisabled: false,
     showSupplierModal: false,
     showProductModal: false,
-    submitBtnDisabled: false
+    addBtnDisabled: false
   }),
   methods: {
     onChange(input) {
@@ -323,23 +324,23 @@ export default {
         qty: null,
         price: null,
         unit: null
-      }
+      };
 
       this.isProductNameDisabled = false;
       this.isProductBarcodeDisabled = false;
       this.isQtyPartial = false;
       this.isQtyPiece = false;
 
-      this.$refs.autocompleteProductName.value = '';
-      this.$refs.autocompleteProductBarcode.value = '';
+      this.$refs.autocompleteProductName.value = "";
+      this.$refs.autocompleteProductBarcode.value = "";
     },
     async searchProductByBarcode(term) {
       if (term.length < 1) {
-        return []
+        return [];
       }
 
-      await this.$store.dispatch('getProductsByBarcode', {term: term});
-      return this.suggestProducts = this.$store.state.product.suggestByBarcode;
+      await this.$store.dispatch("getProductsByBarcode", { term: term });
+      return (this.suggestProducts = this.$store.state.product.suggestByBarcode);
     },
     getResultValueBarcode(result) {
       return result.barcode;
@@ -349,11 +350,11 @@ export default {
     },
     async searchProductByName(term) {
       if (term.length < 1) {
-        return []
+        return [];
       }
 
-      await this.$store.dispatch('getProductsByName', {term: term});
-      return this.suggestProducts = this.$store.state.product.suggestByBarcode;
+      await this.$store.dispatch("getProductsByName", { term: term });
+      return (this.suggestProducts = this.$store.state.product.suggestByBarcode);
     },
     getResultValueName(result) {
       return result.name;
@@ -395,11 +396,12 @@ export default {
       });
 
       if (flag) {
-        return
+        return;
       }
 
       if (this.isQtyPiece) {
-        this.product.qty = this.product.qty +
+        this.product.qty =
+          this.product.qty +
           Math.floor(this.partialQty / this.product.pieceQuantity) +
           (this.partialQty % this.product.pieceQuantity) / 1000;
       }
@@ -417,39 +419,39 @@ export default {
       this.resetForm();
     },
     save() {
-      this.errors = [];
-      // if (this.products.length <= 0)
-      // callAjaxAlert(
-      //   false,
-      //   "Отсутствуют товары! Добавьте товары в накладную!"
-      // );
+      if (!this.number) {
+        this.$toast.warning("Необходимо заполнить номер накладной!");
+        return;
+      }
 
-      // if (!this.number)
-      //   this.errors.push({
-      //     message: "Необходимо заполнить номер накладной!"
-      //   });
+      if (!this.products) {
+        this.$toast.warning("Отсутствуют товары! Добавьте товары в накладную!");
+        return;
+      }
 
-      // if (!this.selectedSupplier)
-      //   this.errors.push({
-      //     message: "Необходимо выбрать поставщика"
-      //   });
+      if (!this.selectedSupplier) {
+        this.$toast.warning("Необходимо выбрать поставщика");
+        return;
+      }
 
-      // if (this.isDebt && parseFloat(this.debtSum) > this.total)
-      //   this.errors.push({
-      //     message:
-      //       "Сумма оплаты указана неверно! Введенная сумма не должна быть больше общей суммы накладной"
-      //   });
+      if (this.isDebt && parseFloat(this.debtSum) > this.total) {
+        this.$toast.warning(
+          "Сумма оплаты указана неверно! Введенная сумма не должна быть больше общей суммы накладной"
+        );
+        return;
+      }
 
-      // if (this.errors.length > 0) {
-      //   let errorsList = '<ul style="list-style: none">';
-      //   this.errors.forEach(function(item) {
-      //     errorsList += "<li>" + item.message + "</li>";
-      //   });
-      //   errorsList += "</ul>";
-      //   callAjaxAlert(false, errorsList);
-      // }
+      this.addBtnDisabled = false;
 
-      this.submitBtnDisabled = true;
+      this.$store.dispatch("createInvoice", {
+        invoice: {
+          number_in: this.number,
+          is_debt: this.is_debt,
+          supplier_id: this.supplier_id,
+          cost: this.total
+        },
+        invoiceItems: this.products
+      });
 
       // $.post({
       //   url: "/invoice/create",
@@ -490,7 +492,8 @@ export default {
       // });
     },
     setDebt() {
-      this.isSaveBtnDisabled = !this.isDebt;
+      this.addBtnDisabled = !this.isDebt;
+      this.debtSum = 0;
     },
     setInit() {
       if (!this.isInit) {
@@ -504,7 +507,7 @@ export default {
     },
     deleteProduct(i) {
       this.products.splice(i, 1);
-    },
+    }
   },
   async mounted() {
     await this.$store.dispatch("getSuppliers");
