@@ -37,7 +37,7 @@
         :container-class="'pagination'"
       />
     </div>
-    <SupplierModal v-if="showCreateSupplierModal" @close="supplierModalCloseHandler" />
+    <SupplierModal v-if="showCreateSupplierModal" @close="showCreateSupplierModal = false" />
   </div>
 </template>
 
@@ -46,16 +46,20 @@ import SupplierModal from '@/components/SupplierModal';
 
 export default {
   name: "Supplier",
+  computed: {
+    dataProvider() {
+      return this.$store.state.supplier.dataProvider || {
+        currentPage: null,
+        records: [],
+        totalPages: 0,
+        totalItems: 0
+      };
+    }
+  },
   data: () => ({
     loading: false,
     page: 1,
     pageSize: 20,
-    dataProvider: {
-      currentPage: null,
-      records: [],
-      totalPages: 0,
-      totalItems: 0
-    },
     showCreateSupplierModal: false
   }),
   components: {
@@ -75,13 +79,8 @@ export default {
         page: this.page - 1,
         pageSize: this.pageSize
       });
-      this.dataProvider = this.$store.state.invoice.dataProvider;
 
       this.loading = false;
-    },
-    supplierModalCloseHandler() {
-      this.showCreateSupplierModal = false;
-      this.setTable();
     }
   },
   async mounted() {

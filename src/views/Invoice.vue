@@ -71,15 +71,12 @@ export default {
       this.loading = true;
       await this.setSuppliers();
 
-      console.log(this.suppliers);
-
       await this.$store.dispatch("fetchInvoices", {
         page: this.page - 1,
         pageSize: this.pageSize
       });
       this.dataProvider = this.$store.state.invoice.dataProvider;
       this.dataProvider.records = this.dataProvider.records.map(record => {
-        console.log(record);
         return {
           ...record,
           supplier_name: this.suppliers.find(c => c.id === record.supplier_id).name

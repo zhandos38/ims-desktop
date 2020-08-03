@@ -78,4 +78,20 @@ router.post("/create", async (req, res) => {
     }
 });
 
+router.post("/get-product-by-id", async (req, res) => {
+    const { barcode } = req.body;
+
+    Product.findOne({
+        where: {
+            barcode: barcode
+        }
+    })
+    .then(data => {
+        res.json(data);
+    })
+    .catch(err => {
+        res.send("error: " + err);
+    });
+});
+
 module.exports = router;

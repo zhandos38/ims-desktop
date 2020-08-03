@@ -64,7 +64,6 @@
 
                 await this.$store.dispatch('createSupplier', {name: this.name, phone: this.phone});
 
-
                 this.close();
             },
             close() {
