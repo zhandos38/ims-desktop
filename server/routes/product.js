@@ -21,7 +21,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/list", (req, res) => {
-    Product.findAll()
+  Product.findAll()
     .then(suppliers => {
       res.json(suppliers);
     })
@@ -31,66 +31,69 @@ router.get("/list", (req, res) => {
 });
 
 router.get("/search-by-barcode", (req, res) => {
-    const { term } = req.query;
+  const { term } = req.query;
 
-    Product.findAll({
-        where: {
-            barcode: {
-                [Op.like]: '%' + term + '%',
-            }
-        }
-    })
+  Product.findAll({
+    where: {
+      barcode: {
+        [Op.like]: "%" + term + "%"
+      }
+    }
+  })
     .then(data => {
-        res.json(data);
+      res.json(data);
     })
     .catch(err => {
-        res.send("error: " + err);
+      res.send("error: " + err);
     });
 });
 
 router.get("/search-by-name", (req, res) => {
-    const { term } = req.query;
+  const { term } = req.query;
 
-    Product.findAll({
-        where: {
-            name: {
-                [Op.like]: '%' + term + '%',
-            }
-        }
-    })
+  Product.findAll({
+    where: {
+      name: {
+        [Op.like]: "%" + term + "%"
+      }
+    }
+  })
     .then(data => {
-        res.json(data);
+      res.json(data);
     })
     .catch(err => {
-        res.send("error: " + err);
+      res.send("error: " + err);
     });
 });
 
 router.post("/create", async (req, res) => {
-    const { name, phone } = req.body;
+  const dataForm = req.body;
 
-    try {
-        const supplier = await Product.create({ name: name, phone: phone, created_at: Date.now() / 1000 });
-        await supplier.save();
-        res.status("200").send("Ok");
-    } catch (err) {
-        res.status("500").send("error: " + err);
-    }
+  try {
+    const supplier = await Product.create({
+      ...dataForm,
+      created_at: Date.now() / 1000
+    });
+    await supplier.save();
+    res.status("200").send("Ok");
+  } catch (err) {
+    res.status("500").send("error: " + err);
+  }
 });
 
 router.post("/get-product-by-id", async (req, res) => {
-    const { barcode } = req.body;
+  const { barcode } = req.body;
 
-    Product.findOne({
-        where: {
-            barcode: barcode
-        }
-    })
+  Product.findOne({
+    where: {
+      barcode: barcode
+    }
+  })
     .then(data => {
-        res.json(data);
+      res.json(data);
     })
     .catch(err => {
-        res.send("error: " + err);
+      res.send("error: " + err);
     });
 });
 

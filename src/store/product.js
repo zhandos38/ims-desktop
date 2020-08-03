@@ -18,17 +18,17 @@ export default {
 
       commit("setList", data);
     },
-    async createProduct({ commit }, { barcode, name, unit, type, price_retail, price_wholesale, wholesale_quantity }) {
+    async createProduct({ commit }, { ...dataForm }) {
       try {
         await axios
-          .post("http://localhost:4040/product/create", [
-              barcode, name, unit, type, price_retail, price_wholesale, wholesale_quantity
-          ])
-          .then((response) => {
+          .post("http://localhost:4040/product/create", { ...dataForm })
+          .then(response => {
             this._vm.$toast.open("Товар успешно создан");
           })
           .catch(error => {
-            this._vm.$toast.open("Произошло ошибка, обратитесь в службу поддержки");
+            this._vm.$toast.error(
+              "Произошло ошибка, обратитесь в службу поддержки"
+            );
             throw error;
           });
       } catch (e) {
@@ -39,11 +39,11 @@ export default {
       try {
         const data = await (
           await fetch(
-              `http://localhost:4040/product/search-by-barcode?term=${term}`
+            `http://localhost:4040/product/search-by-barcode?term=${term}`
           )
         ).json();
 
-        commit('setSuggestByBarcode', data);
+        commit("setSuggestByBarcode", data);
       } catch (e) {
         this._vm.$toast.open("Произошло ошибка, обратитесь в службу поддержки");
         throw e;
@@ -52,17 +52,17 @@ export default {
     async getProductsByName({ commit }, { term }) {
       try {
         const data = await (
-            await fetch(
-                `http://localhost:4040/product/search-by-name?term=${term}`
-            )
+          await fetch(
+            `http://localhost:4040/product/search-by-name?term=${term}`
+          )
         ).json();
 
-        commit('setSuggestByBarcode', data);
+        commit("setSuggestByBarcode", data);
       } catch (e) {
         this._vm.$toast.open("Произошло ошибка, обратитесь в службу поддержки");
         throw e;
       }
-    },
+    }
   },
   mutations: {
     setDataProvider(state, data) {

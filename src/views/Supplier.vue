@@ -4,7 +4,13 @@
     <div class="app-container" v-else>
       <div class="app-container__header">
         <router-link class="btn btn-info" to="/">Назад</router-link>
-        <button class="btn btn-success" type="button" @click="showCreateSupplierModal = true">Добавить поставщиков</button>
+        <button
+          class="btn btn-success"
+          type="button"
+          @click="showCreateSupplierModal = true"
+        >
+          Добавить поставщиков
+        </button>
       </div>
       <div>
         <small>Всего записей: {{ dataProvider.totalItems }}</small>
@@ -19,10 +25,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(record, index) in dataProvider.records" v-bind:key="record.id">
-            <td>{{ ((page - 1) * pageSize) + ++index }}</td>
+          <tr
+            v-for="(record, index) in dataProvider.records"
+            v-bind:key="record.id"
+          >
+            <td>{{ (page - 1) * pageSize + ++index }}</td>
             <td>{{ record.name }}</td>
-            <td v-if="record.phone">{{ record.phone | VMask('7(###)###-##-##') }}</td>
+            <td v-if="record.phone">
+              {{ record.phone | VMask("7(###)###-##-##") }}
+            </td>
             <td v-else>Не указано</td>
             <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
           </tr>
@@ -37,23 +48,28 @@
         :container-class="'pagination'"
       />
     </div>
-    <SupplierModal v-if="showCreateSupplierModal" @close="showCreateSupplierModal = false" />
+    <SupplierModal
+      v-if="showCreateSupplierModal"
+      @close="showCreateSupplierModal = false"
+    />
   </div>
 </template>
 
 <script>
-import SupplierModal from '@/components/SupplierModal';
+import SupplierModal from "@/components/SupplierModal";
 
 export default {
   name: "Supplier",
   computed: {
     dataProvider() {
-      return this.$store.state.supplier.dataProvider || {
-        currentPage: null,
-        records: [],
-        totalPages: 0,
-        totalItems: 0
-      };
+      return (
+        this.$store.state.supplier.dataProvider || {
+          currentPage: null,
+          records: [],
+          totalPages: 0,
+          totalItems: 0
+        }
+      );
     }
   },
   data: () => ({

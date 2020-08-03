@@ -67,8 +67,8 @@
             <label for="type">
               Тип.
             </label>
-            <select id="type" class="form-control" v-model="isPartial">
-              <option value="false">Выберите тип</option>
+            <select id="type" class="form-control" v-model="type">
+              <option value="null">Выберите тип</option>
               <option value="0">Цельный</option>
               <option value="1">Весовой</option>
               <option value="2">Разливной</option>
@@ -204,7 +204,7 @@ export default {
     name: null,
     barcode: null,
     unit: null,
-    isPartial: false,
+    type: null,
     isNameDisabled: false,
     isBarcodeDisabled: false,
     isUnitDisabled: false,
@@ -276,48 +276,7 @@ export default {
       this.name = data.name;
       this.unit = data.unit;
 
-      // $.get({
-      //   url: "/product/get-product-from-barcode-by-barcode",
-      //   data: { barcode: this.productCreateBarcode },
-      //   dataType: "JSON",
-      //   success: result => {
-      //     console.log(result);
-      //     if (result !== "not_found") {
-      //       this.setProductCreate(result);
-      //     } else {
-      //       this.productCreateName = null;
-      //       // this.productCreateBarcode = null;
-      //       this.productCreateUnit = null;
-      //       this.productCreateAlertShow("Товар в базе не найден!");
-      //     }
-      //   },
-      //   error: function() {
-      //     console.log("Ошибка!");
-      //   }
-      // });
-
       this.isBarcodeGeneratorDisabled = true;
-    },
-    getProductByBarcode(barcode) {
-      console.log(barcode);
-      // $.get({
-      //   url: "/product/get-product-from-barcode-by-barcode",
-      //   form: "JSON",
-      //   data: { barcode: barcode },
-      //   success: result => {
-      //     console.log(result);
-      //     if (result === "not_found") {
-      //       this.productCreateAlertShow("Товар в базе не найден!");
-      //       this.productCreateBarcode = barcode;
-      //       return;
-      //     }
-      //
-      //     this.createProduct(result);
-      //   },
-      //   error: function() {
-      //     console.log("Get product error!");
-      //   }
-      // });
     },
     setProductCreate(product) {
       this.name = product["name"];
@@ -327,10 +286,16 @@ export default {
       // this.isUnitDisabled = true;
       this.isNew = false;
     },
-
     createProduct() {
-      if (!this.name || !this.barcode || !this.unit || !this.priceRetail) {
+      if (
+        !this.name ||
+        !this.barcode ||
+        !this.unit ||
+        !this.type ||
+        !this.priceRetail
+      ) {
         this.$toast.warning("Заполните все поля!");
+        return;
       }
 
       this.$store.dispatch("createProduct", {
@@ -339,12 +304,14 @@ export default {
         unit: this.unit,
         type: this.type,
         price_retail: this.priceRetail,
-        priceWholesale: this.priceWholesale,
-        wholesale_quantity: this.wholesaleQuantity,
+        price_wholesale: this.priceWholesale,
+        wholesale_value: this.wholesaleQuantity,
         is_piece: this.isPiece,
         piece_price: this.piecePrice,
         piece_quantity: this.pieceQuantity
       });
+
+      this.resetForm();
     },
     showPieceBox() {
       if (this.isPiece) {
@@ -361,7 +328,7 @@ export default {
       this.barcode = null;
       this.name = null;
       this.unit = null;
-      this.isPartial = false;
+      this.type = null;
       this.isBarcodeGeneratorDisabled = false;
       this.isBarcodeDisabled = false;
       this.isNameDisabled = false;
