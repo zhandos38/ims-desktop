@@ -4,7 +4,9 @@
     <div class="app-container" v-else>
       <div class="app-container__header">
         <router-link class="btn btn-info" to="/">Назад</router-link>
-        <router-link class="btn btn-success" to="/invoice-create">Добавить накладную</router-link>
+        <router-link class="btn btn-success" to="/invoice-create"
+          >Добавить накладную</router-link
+        >
       </div>
       <div>
         <small>Всего записей: {{ dataProvider.totalItems }}</small>
@@ -22,12 +24,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(record, index) in dataProvider.records" v-bind:key="record.id">
-            <td>{{ ((page - 1) * pageSize) + ++index }}</td>
+          <tr
+            v-for="(record, index) in dataProvider.records"
+            v-bind:key="record.id"
+          >
+            <td>{{ (page - 1) * pageSize + ++index }}</td>
             <td>{{ record.number_in }}</td>
             <td>{{ record.supplier_name }}</td>
             <td>{{ record.is_debt ? "Да" : "Нет" }}</td>
-            <td>{{ record.status }}</td>
+            <td>{{ record.status_label }}</td>
             <td>{{ record.cost }}</td>
             <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
           </tr>
@@ -46,6 +51,8 @@
 </template>
 
 <script>
+import invoiceStatuses from "@/utils/invoiceStatuses";
+
 export default {
   name: "Invoice",
   data: () => ({
@@ -77,9 +84,13 @@ export default {
       });
       this.dataProvider = this.$store.state.invoice.dataProvider;
       this.dataProvider.records = this.dataProvider.records.map(record => {
+        let supplier = this.suppliers.find(c => c.id === record.supplier_id);
+
         return {
           ...record,
-          supplier_name: this.suppliers.find(c => c.id === record.supplier_id).name
+          supplier_name:
+            typeof supplier !== "undefined" ? supplier.name : "Не указано",
+          status_label: invoiceStatuses[record.status]
         };
       });
       this.loading = false;

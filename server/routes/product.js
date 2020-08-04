@@ -5,12 +5,15 @@ const express = require("express"),
   { Op } = require("sequelize");
 
 router.get("/", (req, res) => {
-  console.log(req.query);
   const { page, size } = req.query;
 
   const { limit, offset } = getPagination(page, size);
 
-  Product.findAndCountAll({ limit, offset })
+  Product.findAndCountAll({
+    limit,
+    offset,
+    order: [["id", "DESC"]]
+  })
     .then(data => {
       const response = getPagingData(data, page, limit);
       res.json(response);

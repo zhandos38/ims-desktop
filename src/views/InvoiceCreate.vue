@@ -429,7 +429,7 @@ export default {
         return;
       }
 
-      if (!this.selectedSupplier) {
+      if (!this.isInit && !this.selectedSupplier) {
         this.$toast.warning("Необходимо выбрать поставщика");
         return;
       }
@@ -468,6 +468,7 @@ export default {
       this.products = [];
       this.number = null;
       this.selectedSupplier = null;
+      this.isInit = false;
     },
     setDebt() {
       this.addBtnDisabled = !this.isDebt;
@@ -475,12 +476,11 @@ export default {
     },
     setInit() {
       if (!this.isInit) {
-        this.selectedSupplier = "init";
+        this.selectedSupplier = null;
         this.number = "Первый запуск";
-        // $("#invoice-supplier").prop("disabled", true);
       } else {
         this.selectedSupplier = null;
-        // $("#invoice-supplier").prop("disabled", false);
+        this.number = null;
       }
     },
     deleteProduct(i) {

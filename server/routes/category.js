@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  Supplier = require("../models/supplier"),
+  Model = require("../models/category"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 
   const { limit, offset } = getPagination(page, size);
 
-  Supplier.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
+  Model.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
     .then(data => {
       const response = getPagingData(data, page, limit);
       res.json(response);
@@ -19,9 +19,9 @@ router.get("/", (req, res) => {
 });
 
 router.get("/list", (req, res) => {
-  Supplier.findAll()
-    .then(suppliers => {
-      res.json(suppliers);
+  Model.findAll()
+    .then(models => {
+      res.json(models);
     })
     .catch(err => {
       res.send("error: " + err);
@@ -29,12 +29,12 @@ router.get("/list", (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  const { name, phone } = req.body;
+  const { name, color } = req.body;
 
   try {
-    const supplier = await Supplier.create({
+    const supplier = await Model.create({
       name: name,
-      phone: phone,
+      color: color,
       created_at: Date.now() / 1000
     });
     await supplier.save();

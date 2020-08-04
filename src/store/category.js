@@ -2,28 +2,28 @@ import axios from "axios";
 
 export default {
   actions: {
-    async fetchSuppliers({ commit }, { page = 0, pageSize = 20 }) {
+    async fetchCategories({ commit }, { page = 0, pageSize = 20 }) {
       const data = await (
         await fetch(
-          `http://localhost:4040/supplier/?page=${page}&size=${pageSize}`
+          `http://localhost:4040/category/?page=${page}&size=${pageSize}`
         )
       ).json();
 
       commit("setDataProvider", data);
     },
-    async getSuppliers({ commit }) {
+    async getCategories({ commit }) {
       const data = await (
-        await fetch(`http://localhost:4040/supplier/list`)
+        await fetch(`http://localhost:4040/category/list`)
       ).json();
 
       commit("setList", data);
     },
-    async createSupplier({ dispatch, commit }, { name, phone }) {
+    async createCategory({ dispatch, commit }, { name, color }) {
       try {
         await axios
-          .post("http://localhost:4040/supplier/create", {
+          .post("http://localhost:4040/category/create", {
             name: name,
-            phone: phone
+            color: color
           })
           .then(async response => {
             this._vm.$toast.open("Поставщик успешно создан");

@@ -11,7 +11,7 @@ import "bootstrap/dist/js/bootstrap.min";
 import "vue-toast-notification/dist/theme-default.css";
 import VueNumberInput from "@chenfengyuan/vue-number-input";
 import VueMask from "v-mask";
-import { VueMaskFilter } from 'v-mask';
+import { VueMaskFilter } from "v-mask";
 
 Vue.config.productionTip = false;
 
