@@ -245,7 +245,7 @@
         </div>
       </div>
     </div>
-    <ProductModal v-if="showProductModal" @close="showProductModal = false" />
+    <ProductCreateModal v-if="showProductModal" @close="showProductModal = false" />
     <SupplierModal
       v-if="showSupplierModal"
       @close="showSupplierModal = false"
@@ -256,8 +256,8 @@
 <script>
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
-import SupplierModal from "@/components/SupplierModal";
-import ProductModal from "@/components/ProductModal";
+import SupplierModal from "../components/SupplierModal";
+import ProductCreateModal from "../components/ProductCreateModal";
 
 export default {
   name: "InvoiceCreate",
@@ -273,7 +273,7 @@ export default {
   },
   components: {
     SupplierModal,
-    ProductModal,
+    ProductCreateModal,
     Autocomplete
   },
   data: () => ({

@@ -22,7 +22,7 @@ export default {
       try {
         await axios
           .post("http://localhost:4040/product/create", { ...dataForm })
-          .then(response => {
+          .then(async response => {
             this._vm.$toast.open("Товар успешно создан");
           })
           .catch(error => {

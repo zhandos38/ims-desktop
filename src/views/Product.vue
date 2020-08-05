@@ -15,6 +15,7 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>Действия</th>
             <th>Штрихкод</th>
             <th>Наименование товара</th>
             <th>Ед/изм.</th>
@@ -34,6 +35,7 @@
             v-bind:key="record.id"
           >
             <td>{{ (page - 1) * pageSize + ++index }}</td>
+            <td><button class="btn btn-info" @click="openProductEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
             <td>{{ record.barcode }}</td>
             <td>{{ record.name }}</td>
             <td>{{ record.unit }}</td>
@@ -57,36 +59,35 @@
         :container-class="'pagination'"
       />
     </div>
-    <ProductModal v-if="showProductModal" @close="showProductModal = false" />
+    <ProductCreateModal v-if="showProductCreateModal" @close="handleProductCreateModalClose" />
+    <ProductEditModal v-if="showProductEditModal" :id="selectedProduct" @close="showProductEditModal = false" />
   </div>
 </template>
 
 <script>
-import ProductModal from "../components/ProductModal";
+import ProductCreateModal from "../components/ProductCreateModal";
+import ProductEditModal from "../components/ProductEditModal";
 
 export default {
   name: "Invoice",
   components: {
-    ProductModal
-  },
-  computed: {
-    dataProvider() {
-      return (
-        this.$store.state.product.dataProvider || {
-          currentPage: null,
-          records: [],
-          totalPages: 0,
-          totalItems: 0
-        }
-      );
-    }
+    ProductCreateModal,
+    ProductEditModal
   },
   data: () => ({
+    selectedProduct: null,
     loading: false,
     page: 1,
     pageSize: 20,
+    dataProvider: {
+      currentPage: null,
+      records: [],
+      totalPages: 0,
+      totalItems: 0
+    },
     categories: [],
-    showProductModal: false
+    showProductCreateModal: false,
+    showProductEditModal: false
   }),
   methods: {
     changePageHandler(page) {
@@ -104,6 +105,7 @@ export default {
         pageSize: this.pageSize
       });
 
+      this.dataProvider = this.$store.state.product.dataProvider;
       this.dataProvider.records = this.dataProvider.records.map(record => {
         let category = this.categories.find(c => c.id === record.category_id);
 
@@ -118,6 +120,14 @@ export default {
     async setCategories() {
       await this.$store.dispatch("getCategories");
       this.categories = this.$store.state.category.list;
+    },
+    handleProductCreateModalClose() {
+      this.setTable();
+      this.showProductModal = false;
+    },
+    openProductEditModal(id) {
+      this.selectedProduct = id;
+      this.showProductEditModal = true;
     }
   },
   async mounted() {

@@ -194,7 +194,7 @@ import Modal from "@/components/app/Modal";
 import Loader from "./app/Loader";
 
 export default {
-  name: "ProductModal",
+  name: "ProductCreateModal",
   components: {
     Modal,
     Loader

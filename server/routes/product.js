@@ -69,6 +69,22 @@ router.get("/search-by-name", (req, res) => {
     });
 });
 
+router.get("/get-by-id", (req, res) => {
+  const { id } = req.query;
+
+  Product.findOne({
+    where: {
+      id: id
+    }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
 router.post("/create", async (req, res) => {
   const dataForm = req.body;
 

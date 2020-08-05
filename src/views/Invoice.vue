@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import invoiceStatuses from "@/utils/invoiceStatuses";
+import Invoice from "../utils/invoice";
 
 export default {
   name: "Invoice",
@@ -90,7 +90,7 @@ export default {
           ...record,
           supplier_name:
             typeof supplier !== "undefined" ? supplier.name : "Не указано",
-          status_label: invoiceStatuses[record.status]
+          status_label: Invoice.statuses[record.status]
         };
       });
       this.loading = false;
