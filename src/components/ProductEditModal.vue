@@ -140,8 +140,40 @@
             </select>
           </div>
         </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input id="product-is-piece" type="checkbox" v-model="product.is_piece">
+            <label for="product-is-piece">Данный товар возможно продавать поштучно</label>
+          </div>
+        </div>
+        <div class="col-md-12" v-if="product.is_piece">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="product-piece-price">Цена за единицу</label>
+                <input
+                        id="product-piece-price"
+                        class="form-control"
+                        type="text"
+                        v-model="product.piece_price"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="product-piece-quantity">Количество штук в упаковке</label>
+                <input
+                        id="product-piece-quantity"
+                        class="form-control"
+                        type="text"
+                        v-model="product.piece_quantity"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="col-md-12">
-          <button class="btn btn-success w-100">
+          <button class="btn btn-success w-100" @click="save">
             Сохранить
           </button>
         </div>
@@ -176,6 +208,7 @@ export default {
       price_wholesale: null,
       wholesale_value: null,
       type: null,
+      is_piece: false,
       status: null
     },
     categories: [],
@@ -190,6 +223,9 @@ export default {
 
       this.types = Product.types;
       this.statuses = Product.statuses;
+    },
+    save() {
+      this.$store.dispatch('updateProduct', this.product);
     },
     close() {
       this.$emit("close");

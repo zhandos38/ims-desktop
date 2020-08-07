@@ -3,9 +3,9 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/">Назад</router-link>
-        <button class="btn btn-success" @click="showProductModal = true">
-          Добавить товар
+        <router-link class="btn btn-info" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <button class="btn btn-success" @click="showProductCreateModal = true">
+          Создать <i class="fa fa-plus"></i>
         </button>
       </div>
       <div>
@@ -59,20 +59,18 @@
         :container-class="'pagination'"
       />
     </div>
-    <ProductCreateModal v-if="showProductCreateModal" @close="handleProductCreateModalClose" />
-    <ProductEditModal v-if="showProductEditModal" :id="selectedProduct" @close="showProductEditModal = false" />
+    <ProductModal v-if="showProductCreateModal" @close="handleProductCreateModalClose" />
+    <ProductModal v-if="showProductEditModal" :id="selectedProduct" @close="showProductEditModal = false" />
   </div>
 </template>
 
 <script>
-import ProductCreateModal from "../components/ProductCreateModal";
-import ProductEditModal from "../components/ProductEditModal";
+import ProductModal from "../components/ProductModal";
 
 export default {
   name: "Invoice",
   components: {
-    ProductCreateModal,
-    ProductEditModal
+    ProductModal,
   },
   data: () => ({
     selectedProduct: null,
@@ -115,6 +113,7 @@ export default {
             typeof category !== "undefined" ? category.name : "Не указано"
         };
       });
+
       this.loading = false;
     },
     async setCategories() {
@@ -123,7 +122,7 @@ export default {
     },
     handleProductCreateModalClose() {
       this.setTable();
-      this.showProductModal = false;
+      this.showProductCreateModal = false;
     },
     openProductEditModal(id) {
       this.selectedProduct = id;

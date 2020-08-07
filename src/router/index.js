@@ -43,6 +43,11 @@ const routes = [
     name: "product",
     meta: { layout: "full" },
     component: () => import("@/views/Product.vue")
+  },
+  {
+    path: "/category",
+    name: "category",
+    component: () => import("@/views/Category.vue")
   }
 ];
 

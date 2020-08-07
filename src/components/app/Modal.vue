@@ -42,5 +42,6 @@
     position: absolute;
     right: 3%;
     top: 7.5%;
+    z-index: 2;
 }
 </style>

@@ -2,7 +2,6 @@
   <Modal @close="close">
     <Loader v-if="showLoader" />
     <div v-else>
-      <h2>Добавление товара</h2>
       <div class="row">
         <div class="col-md-5">
           <div class="form-group">
@@ -14,13 +13,14 @@
               type="text"
               class="form-control product-create-input"
               placeholder="Введите штрихкод"
-              v-model="barcode"
-              :class="isBarcodeDisabled ? 'block-disabled' : ''"
+              v-model="product.barcode"
+              :disabled="isBarcodeDisabled || id"
             />
           </div>
           <button
             class="btn btn-info product-create-btn"
             @click="searchProduct"
+            :disabled="id"
           >
             <i class="fa fa-search"></i>
           </button>
@@ -35,13 +35,13 @@
               type="text"
               class="form-control product-create-input"
               placeholder="Введите наименование"
-              v-model="name"
+              v-model="product.name"
             />
           </div>
           <button
             class="btn btn-info product-create-btn"
             @click="generateBarcode"
-            :class="isBarcodeGeneratorDisabled ? 'block-disabled' : ''"
+            :disabled="isBarcodeGeneratorDisabled || id"
           >
             <i class="fa fa-barcode"></i>
           </button>
@@ -58,7 +58,7 @@
               type="text"
               class="form-control"
               placeholder="Введите ед/изм."
-              v-model="unit"
+              v-model="product.unit"
             />
           </div>
         </div>
@@ -67,7 +67,7 @@
             <label for="type">
               Тип.
             </label>
-            <select id="type" class="form-control" v-model="type">
+            <select id="type" class="form-control" v-model="product.type">
               <option value="null">Выберите тип</option>
               <option value="0">Цельный</option>
               <option value="1">Весовой</option>
@@ -84,7 +84,7 @@
               id="price"
               type="number"
               class="form-control"
-              v-model="priceRetail"
+              v-model="product.price_retail"
               placeholder="Введите розничкую цену"
             />
           </div>
@@ -98,7 +98,7 @@
               id="price-wholesale"
               type="number"
               class="form-control"
-              v-model="priceWholesale"
+              v-model="product.price_wholesale"
               placeholder="Введите оптовую цену"
             />
           </div>
@@ -112,7 +112,7 @@
               id="quantity-wholesale"
               type="number"
               class="form-control"
-              v-model="wholesaleQuantity"
+              v-model="product.wholesale_value"
               placeholder="Введите оптовое количество"
             />
           </div>
@@ -124,14 +124,13 @@
             <input
               id="is-piece"
               type="checkbox"
-              v-model="isPiece"
-              @click="isPieceBoxActive = !isPieceBoxActive"
+              v-model="product.is_piece"
             />
             <label for="is-piece"
               >Данный товар возможно продавать поштучно</label
             >
           </div>
-          <div class="row" v-if="isPieceBoxActive">
+          <div class="row" v-if="product.is_piece">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="piece-price">
@@ -140,7 +139,7 @@
                 <input
                   id="piece-price"
                   type="number"
-                  v-model="piecePrice"
+                  v-model="product.piece_price"
                   class="form-control"
                   placeholder="Введите цену за единицу"
                 />
@@ -154,7 +153,7 @@
                 <input
                   id="piece-quantity"
                   type="number"
-                  v-model="pieceQuantity"
+                  v-model="product.piece_quantity"
                   class="form-control"
                   placeholder="Введите количество в упаковке"
                 />
@@ -170,6 +169,7 @@
             @click="resetForm"
             data-target="tooltip"
             title="Обновить список"
+            :disabled="id"
           >
             <i class="fa fa-sync"></i> Сбросить
           </button>
@@ -177,11 +177,11 @@
         <div class="col-md-8">
           <button
             class="btn btn-success w-100"
-            @click="createProduct"
+            @click="save"
             data-target="tooltip"
             title="Добавить товар на склад"
           >
-            <i class="fa fa-save"></i> Добавить товар на склад
+            <i class="fa fa-save"></i> Сохранить
           </button>
         </div>
       </div>
@@ -192,6 +192,7 @@
 <script>
 import Modal from "@/components/app/Modal";
 import Loader from "./app/Loader";
+import Product from "../utils/product";
 
 export default {
   name: "ProductCreateModal",
@@ -199,26 +200,43 @@ export default {
     Modal,
     Loader
   },
+  props: {
+    id: {
+      type: Number,
+      default: null,
+      required: false
+    }
+  },
   data: () => ({
     showLoader: false,
-    name: null,
-    barcode: null,
-    unit: null,
-    type: null,
+    product: {
+      name: null,
+      barcode: null,
+      unit: null,
+      type: null,
+      isNew: true,
+      price_retail: null,
+      price_wholesale: null,
+      wholesale_value: null,
+      is_piece: null,
+      piece_price: null,
+      piece_quantity: null
+    },
     isNameDisabled: false,
     isBarcodeDisabled: false,
     isUnitDisabled: false,
-    isNew: true,
-    priceRetail: null,
-    priceWholesale: null,
-    wholesaleQuantity: null,
-    isPiece: null,
-    piecePrice: null,
-    pieceQuantity: null,
     isPieceBoxActive: false,
     isBarcodeGeneratorDisabled: false
   }),
   methods: {
+    async setForm() {
+      this.product = await (
+          await fetch(`http://localhost:4040/product/get-by-id?id=${this.id}`)
+      ).json();
+
+      this.types = Product.types;
+      this.statuses = Product.statuses;
+    },
     async generateBarcode() {
       let length = 11;
       let timestamp = +new Date();
@@ -240,7 +258,7 @@ export default {
         return id;
       };
 
-      this.barcode = "999" + generate();
+      this.product.barcode = "999" + generate();
 
       // this.barcode = await (
       //     await fetch(
@@ -249,7 +267,7 @@ export default {
       // ).json();
     },
     async searchProduct() {
-      if (this.barcode == null || this.barcode === "") {
+      if (this.product.barcode == null || this.product.barcode === "") {
         this.$toast.warning("Штрихкод товара не должен быть пустым");
         return;
       }
@@ -262,8 +280,8 @@ export default {
         )
       ).json();
 
-      this.name = null;
-      this.unit = null;
+      this.product.name = null;
+      this.product.unit = null;
 
       this.showLoader = false;
 
@@ -272,71 +290,64 @@ export default {
         return;
       }
 
-      this.barcode = data.number;
-      this.name = data.name;
-      this.unit = data.unit;
+      this.product.barcode = data.number;
+      this.product.name = data.name;
+      this.product.unit = data.unit;
 
       this.isBarcodeGeneratorDisabled = true;
     },
     setProductCreate(product) {
-      this.name = product["name"];
-      this.unit = product["unit"];
+      this.product.name = product["name"];
+      this.product.unit = product["unit"];
       // this.isNameDisabled = true;
       this.isBarcodeDisabled = true;
       // this.isUnitDisabled = true;
       this.isNew = false;
     },
-    createProduct() {
+    save() {
       if (
-        !this.name ||
-        !this.barcode ||
-        !this.unit ||
-        !this.type ||
-        !this.priceRetail
+        !this.product.name ||
+        !this.product.barcode ||
+        !this.product.unit ||
+        !this.product.type ||
+        !this.product.price_retail
       ) {
         this.$toast.warning("Заполните все поля!");
         return;
       }
 
-      this.$store.dispatch("createProduct", {
-        barcode: this.barcode,
-        name: this.name,
-        unit: this.unit,
-        type: this.type,
-        price_retail: this.priceRetail,
-        price_wholesale: this.priceWholesale,
-        wholesale_value: this.wholesaleQuantity,
-        is_piece: this.isPiece,
-        piece_price: this.piecePrice,
-        piece_quantity: this.pieceQuantity
-      });
+      if (this.id) {
+        this.$store.dispatch("updateProduct", this.product);
+      } else {
+        this.$store.dispatch("createProduct", this.product);
+      }
 
       this.resetForm();
     },
     showPieceBox() {
       if (this.isPiece) {
-        this.isPiece = 0;
-        this.piecePrice = null;
-        this.pieceQuantity = null;
+        this.product.is_piece = 0;
+        this.product.piece_price = null;
+        this.product.piece_quantity = null;
       } else {
-        this.isPiece = 1;
+        this.product.is_piece = 1;
       }
 
-      this.isPieceBoxActive = this.isPiece;
+      this.isPieceBoxActive = this.product.is_piece;
     },
     resetForm() {
-      this.barcode = null;
-      this.name = null;
-      this.unit = null;
-      this.type = null;
+      this.product.barcode = null;
+      this.product.name = null;
+      this.product.unit = null;
+      this.product.type = null;
+      this.product.price_retail = null;
+      this.product.price_wholesale = null;
+      this.product.wholesale_value = null;
       this.isBarcodeGeneratorDisabled = false;
       this.isBarcodeDisabled = false;
       this.isNameDisabled = false;
       this.isUnitDisabled = false;
       this.isNew = true;
-      this.priceRetail = null;
-      this.priceWholesale = null;
-      this.wholesaleQuantity = null;
       this.isPiece = 0;
       this.isPieceBoxActive = 0;
     },
@@ -344,6 +355,11 @@ export default {
       this.resetForm();
 
       this.$emit("close");
+    }
+  },
+  async mounted() {
+    if (this.id) {
+      await this.setForm();
     }
   }
 };

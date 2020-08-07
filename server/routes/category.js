@@ -44,4 +44,36 @@ router.post("/create", async (req, res) => {
   }
 });
 
+router.post("/update", async (req, res) => {
+  const dataForm = req.body;
+
+  try {
+    let supplier = await Model.update({ ...dataForm }, {
+      where: {
+        id: dataForm.id
+      }
+    });
+
+    res.status("200").send("Ok");
+  } catch (err) {
+    res.status("500").send("error: " + err);
+  }
+});
+
+router.get("/get-by-id", async (req, res) => {
+  const { id } = req.query;
+
+  Model.findOne({
+    where: {
+      id: id
+    }
+  })
+  .then(data => {
+    res.json(data);
+  })
+  .catch(err => {
+    res.send("error: " + err);
+  });
+});
+
 module.exports = router;

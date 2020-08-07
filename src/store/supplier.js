@@ -27,7 +27,6 @@ export default {
           })
           .then(async response => {
             this._vm.$toast.open("Поставщик успешно создан");
-            await dispatch("getSuppliers");
           })
           .catch(error => {
             this._vm.$toast.open(
@@ -35,6 +34,27 @@ export default {
             );
             throw error;
           });
+      } catch (e) {
+        throw e;
+      }
+    },
+    async updateSupplier({ dispatch, commit }, { id, name, phone }) {
+      try {
+        await axios
+            .post("http://localhost:4040/supplier/update", {
+              id: id,
+              name: name,
+              phone: phone
+            })
+            .then(async response => {
+              this._vm.$toast.open("Поставщик успешно обновлен");
+            })
+            .catch(error => {
+              this._vm.$toast.open(
+                  "Произошло ошибка, обратитесь в службу поддержки"
+              );
+              throw error;
+            });
       } catch (e) {
         throw e;
       }

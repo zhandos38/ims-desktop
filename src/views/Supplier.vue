@@ -3,13 +3,13 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/">Назад</router-link>
+        <router-link class="btn btn-info" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
         <button
           class="btn btn-success"
           type="button"
-          @click="showCreateSupplierModal = true"
+          @click="showCreateModal = true"
         >
-          Добавить поставщиков
+          Создать <i class="fa fa-plus"></i>
         </button>
       </div>
       <div>
@@ -19,6 +19,7 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>Действия</th>
             <th>Наименование</th>
             <th>Номер телефона</th>
             <th>Время создание</th>
@@ -30,6 +31,7 @@
             v-bind:key="record.id"
           >
             <td>{{ (page - 1) * pageSize + ++index }}</td>
+            <td><button class="btn btn-info" @click="openEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
             <td>{{ record.name }}</td>
             <td v-if="record.phone">
               {{ record.phone | VMask("7(###)###-##-##") }}
@@ -49,14 +51,19 @@
       />
     </div>
     <SupplierModal
-      v-if="showCreateSupplierModal"
-      @close="showCreateSupplierModal = false"
+      v-if="showCreateModal"
+      @close="closeModalHandler"
+    />
+    <SupplierModal
+      v-if="showUpdateModal"
+      :id="selected"
+      @close="closeModalHandler"
     />
   </div>
 </template>
 
 <script>
-import SupplierModal from "@/components/SupplierModal";
+import SupplierModal from "../components/SupplierModal";
 
 export default {
   name: "Supplier",
@@ -76,7 +83,9 @@ export default {
     loading: false,
     page: 1,
     pageSize: 20,
-    showCreateSupplierModal: false
+    selected: null,
+    showCreateModal: false,
+    showUpdateModal: false,
   }),
   components: {
     SupplierModal
@@ -97,6 +106,15 @@ export default {
       });
 
       this.loading = false;
+    },
+    openEditModal(id) {
+      this.selected = id;
+      this.showUpdateModal = true;
+    },
+    async closeModalHandler() {
+      await this.setTable();
+      this.showUpdateModal = false;
+      this.showCreateModal = false;
     }
   },
   async mounted() {

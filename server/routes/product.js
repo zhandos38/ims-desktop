@@ -69,6 +69,38 @@ router.get("/search-by-name", (req, res) => {
     });
 });
 
+router.post("/create", async (req, res) => {
+  const dataForm = req.body;
+
+  try {
+    const product = await Product.create({
+      ...dataForm,
+      created_at: Date.now() / 1000,
+      updated_at: Date.now() / 1000,
+    });
+    await product.save();
+    res.status("200").send("Ok");
+  } catch (err) {
+    res.status("500").send("error: " + err);
+  }
+});
+
+router.post("/update", async (req, res) => {
+  const dataForm = req.body;
+
+  try {
+    let product = await Product.update({ ...dataForm }, {
+      where: {
+        id: dataForm.id
+      }
+    });
+
+    res.status("200").send("Ok");
+  } catch (err) {
+    res.status("500").send("error: " + err);
+  }
+});
+
 router.get("/get-by-id", (req, res) => {
   const { id } = req.query;
 
@@ -77,43 +109,12 @@ router.get("/get-by-id", (req, res) => {
       id: id
     }
   })
-    .then(data => {
-      res.json(data);
-    })
-    .catch(err => {
-      res.send("error: " + err);
-    });
-});
-
-router.post("/create", async (req, res) => {
-  const dataForm = req.body;
-
-  try {
-    const supplier = await Product.create({
-      ...dataForm,
-      created_at: Date.now() / 1000
-    });
-    await supplier.save();
-    res.status("200").send("Ok");
-  } catch (err) {
-    res.status("500").send("error: " + err);
-  }
-});
-
-router.post("/get-product-by-id", async (req, res) => {
-  const { barcode } = req.body;
-
-  Product.findOne({
-    where: {
-      barcode: barcode
-    }
+  .then(data => {
+    res.json(data);
   })
-    .then(data => {
-      res.json(data);
-    })
-    .catch(err => {
-      res.send("error: " + err);
-    });
+  .catch(err => {
+    res.send("error: " + err);
+  });
 });
 
 module.exports = router;

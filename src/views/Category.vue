@@ -4,9 +4,13 @@
     <div class="app-container" v-else>
       <div class="app-container__header">
         <router-link class="btn btn-info" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
-        <router-link class="btn btn-success" to="/invoice-create">
+        <button
+          class="btn btn-success"
+          type="button"
+          @click="showCreateModal = true"
+        >
           Создать <i class="fa fa-plus"></i>
-        </router-link>
+        </button>
       </div>
       <div>
         <small>Всего записей: {{ dataProvider.totalItems }}</small>
@@ -15,12 +19,9 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Номер входа</th>
-            <th>Поставщик</th>
-            <th>Под реал</th>
-            <th>Статус</th>
-            <th>Стоимость</th>
-            <th>Время создания</th>
+            <th>Действия</th>
+            <th>Наименование</th>
+            <th>Цвет</th>
           </tr>
         </thead>
         <tbody>
@@ -29,12 +30,12 @@
             v-bind:key="record.id"
           >
             <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td>{{ record.number_in }}</td>
-            <td>{{ record.supplier_name }}</td>
-            <td>{{ record.is_debt ? "Да" : "Нет" }}</td>
-            <td>{{ record.status_label }}</td>
-            <td>{{ record.cost }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            <td><button class="btn btn-info" @click="openEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
+            <td>{{ record.name }}</td>
+            <td v-if="record.color">
+              <div :style="{ 'background-color': record.color, width: '100%', height: '20px' }"></div>
+            </td>
+            <td v-else>Не указано</td>
           </tr>
         </tbody>
       </table>
@@ -47,14 +48,23 @@
         :container-class="'pagination'"
       />
     </div>
+    <CategoryModal
+      v-if="showCreateModal"
+      @close="closeModalHandler"
+    />
+    <CategoryModal
+      v-if="showUpdateModal"
+      :id="selected"
+      @close="closeModalHandler"
+    />
   </div>
 </template>
 
 <script>
-import Invoice from "../utils/invoice";
+import CategoryModal from "@/components/CategoryModal";
 
 export default {
-  name: "Invoice",
+  name: "Category",
   data: () => ({
     loading: false,
     page: 1,
@@ -65,39 +75,40 @@ export default {
       totalPages: 0,
       totalItems: 0
     },
-    suppliers: []
+    showCreateModal: false,
+    showUpdateModal: false,
+    selected: null
   }),
+  components: {
+    CategoryModal
+  },
   methods: {
     changePageHandler(page) {
       this.$router.push(`${this.$route.path}?page=${page}`);
       this.page = page;
-      console.log(this.page);
+
       this.setTable();
     },
     async setTable() {
       this.loading = true;
-      await this.setSuppliers();
 
-      await this.$store.dispatch("fetchInvoices", {
+      await this.$store.dispatch("fetchCategories", {
         page: this.page - 1,
         pageSize: this.pageSize
       });
-      this.dataProvider = this.$store.state.invoice.dataProvider;
-      this.dataProvider.records = this.dataProvider.records.map(record => {
-        let supplier = this.suppliers.find(c => c.id === record.supplier_id);
 
-        return {
-          ...record,
-          supplier_name:
-            typeof supplier !== "undefined" ? supplier.name : "Не указано",
-          status_label: Invoice.statuses[record.status]
-        };
-      });
+      this.dataProvider = this.$store.state.category.dataProvider;
+
       this.loading = false;
     },
-    async setSuppliers() {
-      await this.$store.dispatch("getSuppliers");
-      this.suppliers = this.$store.state.supplier.list;
+    openEditModal(id) {
+      this.selected = id;
+      this.showUpdateModal = true;
+    },
+    async closeModalHandler() {
+      await this.setTable();
+      this.showCreateModal = false;
+      this.showUpdateModal = false;
     }
   },
   async mounted() {

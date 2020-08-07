@@ -15,15 +15,14 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group" :class="{ 'has-error': $v.phone.$dirty && !$v.name.required }">
-                    <label for="supplier-phone">Номер телефона</label>
+                <div class="form-group">
+                    <label for="supplier-phone">Цвет</label>
                     <input
                         id="supplier-phone"
                         class="form-control"
                         type="text"
                         placeholder="Введите номер телефона"
-                        v-model="phone"
-                        v-mask="'7(###)###-##-##'"
+                        v-model="color"
                     />
                 </div>
             </div>
@@ -61,20 +60,19 @@ export default {
     data: () => ({
         showLoader: true,
         name: null,
-        phone: null,
+        color: null,
     }),
     validations: {
-        name: { required },
-        phone: { required }
+        name: { required }
     },
     methods: {
         async setForm() {
-            this.supplier = await (
-                    await fetch(`http://localhost:4040/supplier/get-by-id?id=${this.id}`)
+            const category = await (
+                    await fetch(`http://localhost:4040/category/get-by-id?id=${this.id}`)
             ).json();
 
-            this.name = this.supplier.name;
-            this.phone = this.supplier.phone;
+            this.name = category.name;
+            this.color = typeof category.color !== "undefined" ? category.color : "Не указано";
         },
         async save() {
             if (this.$v.$invalid) {
@@ -83,16 +81,16 @@ export default {
             }
 
             if (this.id) {
-                await this.$store.dispatch('updateSupplier', { id: this.id, name: this.name, phone: this.phone });
+                await this.$store.dispatch('updateCategory', { id: this.id, name: this.name, color: this.color });
             } else {
-                await this.$store.dispatch('createSupplier', { name: this.name, phone: this.phone });
+                await this.$store.dispatch('createCategory', { name: this.name, color: this.color });
             }
 
             this.close();
         },
         close() {
             this.name = null;
-            this.phone = null;
+            this.color = null;
 
             this.$emit('close');
         }

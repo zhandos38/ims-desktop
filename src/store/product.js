@@ -35,6 +35,23 @@ export default {
         throw e;
       }
     },
+    async updateProduct({ commit }, { ...dataForm }) {
+      try {
+        await axios
+            .post("http://localhost:4040/product/update", { ...dataForm } )
+            .then(async response => {
+              this._vm.$toast.open("Товар успешно обновлен");
+            })
+            .catch(error => {
+              this._vm.$toast.error(
+                  "Произошла ошибка, обратитесь в службу поддержки"
+              );
+              throw error;
+            });
+      } catch (e) {
+        throw e;
+      }
+    },
     async getProductsByBarcode({ commit }, { term }) {
       try {
         const data = await (

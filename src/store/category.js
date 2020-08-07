@@ -18,16 +18,14 @@ export default {
 
       commit("setList", data);
     },
-    async createCategory({ dispatch, commit }, { name, color }) {
+    async createCategory({ dispatch, commit }, { ...dataForm }) {
       try {
         await axios
           .post("http://localhost:4040/category/create", {
-            name: name,
-            color: color
+            ...dataForm
           })
           .then(async response => {
             this._vm.$toast.open("Поставщик успешно создан");
-            await dispatch("getSuppliers");
           })
           .catch(error => {
             this._vm.$toast.open(
@@ -35,6 +33,25 @@ export default {
             );
             throw error;
           });
+      } catch (e) {
+        throw e;
+      }
+    },
+    async updateCategory({ dispatch, commit }, { ...dataForm }) {
+      try {
+        await axios
+            .post("http://localhost:4040/category/update", {
+              ...dataForm
+            })
+            .then(async response => {
+              this._vm.$toast.open("Поставщик успешно обновлен");
+            })
+            .catch(error => {
+              this._vm.$toast.open(
+                  "Произошло ошибка, обратитесь в службу поддержки"
+              );
+              throw error;
+            });
       } catch (e) {
         throw e;
       }

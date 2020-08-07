@@ -3,11 +3,9 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/invoice">Назад</router-link>
+        <router-link class="btn btn-info" to="/invoice"><i class="fa fa-arrow-left"></i> Назад</router-link>
       </div>
       <div class="invoice-create__item">
-        <h2>Добавить накладную</h2>
-
         <div class="row">
           <div class="col-md-3">
             <div class="row">
@@ -245,7 +243,7 @@
         </div>
       </div>
     </div>
-    <ProductCreateModal v-if="showProductModal" @close="showProductModal = false" />
+    <ProductModal v-if="showProductModal" @close="showProductModal = false" />
     <SupplierModal
       v-if="showSupplierModal"
       @close="showSupplierModal = false"
@@ -257,7 +255,7 @@
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import SupplierModal from "../components/SupplierModal";
-import ProductCreateModal from "../components/ProductCreateModal";
+import ProductModal from "../components/ProductModal";
 
 export default {
   name: "InvoiceCreate",
@@ -273,7 +271,7 @@ export default {
   },
   components: {
     SupplierModal,
-    ProductCreateModal,
+    ProductModal,
     Autocomplete
   },
   data: () => ({
