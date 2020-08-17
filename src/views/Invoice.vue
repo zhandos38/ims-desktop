@@ -3,8 +3,8 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
-        <router-link class="btn btn-success" to="/invoice-create">
+        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <router-link class="btn btn-outline-success" to="/invoice-create">
           Создать <i class="fa fa-plus"></i>
         </router-link>
       </div>

@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  Model = require("../models/category"),
+  Model = require("../models/customer"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -20,8 +20,8 @@ router.get("/", (req, res) => {
 
 router.get("/list", (req, res) => {
   Model.findAll()
-    .then(models => {
-      res.json(models);
+    .then(suppliers => {
+      res.json(suppliers);
     })
     .catch(err => {
       res.send("error: " + err);
@@ -29,12 +29,11 @@ router.get("/list", (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  const { name, color } = req.body;
+  const dataForm = req.body;
 
   try {
     const supplier = await Model.create({
-      name: name,
-      color: color,
+      ...dataForm,
       created_at: Date.now() / 1000
     });
     await supplier.save();

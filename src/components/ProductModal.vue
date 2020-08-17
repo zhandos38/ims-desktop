@@ -121,11 +121,7 @@
       <div class="row">
         <div class="col-md-12">
           <div id="invoice-piece" class="form-group">
-            <input
-              id="is-piece"
-              type="checkbox"
-              v-model="product.is_piece"
-            />
+            <input id="is-piece" type="checkbox" v-model="product.is_piece" />
             <label for="is-piece"
               >Данный товар возможно продавать поштучно</label
             >
@@ -193,6 +189,7 @@
 import Modal from "@/components/app/Modal";
 import Loader from "./app/Loader";
 import Product from "../utils/product";
+import ScannerDetector from "js-scanner-detection";
 
 export default {
   name: "ProductCreateModal",
@@ -231,7 +228,7 @@ export default {
   methods: {
     async setForm() {
       this.product = await (
-          await fetch(`http://localhost:4040/product/get-by-id?id=${this.id}`)
+        await fetch(`http://localhost:4040/product/get-by-id?id=${this.id}`)
       ).json();
 
       this.types = Product.types;
@@ -361,6 +358,15 @@ export default {
     if (this.id) {
       await this.setForm();
     }
+
+    const scannerDetector = new ScannerDetector({
+      onComplete: barcode => {
+        this.product.barcode = barcode;
+      },
+      stopPropagation: false, // Stop immediate propagation on keypress event
+      preventDefault: false,
+      ignoreIfFocusOn: "input"
+    });
   }
 };
 </script>

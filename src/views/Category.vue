@@ -3,9 +3,9 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
         <button
-          class="btn btn-success"
+          class="btn btn-outline-success"
           type="button"
           @click="showCreateModal = true"
         >
@@ -30,7 +30,10 @@
             v-bind:key="record.id"
           >
             <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td><button class="btn btn-info" @click="openEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
+            <td>
+              <button class="table-btn btn btn-outline-info" @click="openEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button>
+              <button class="table-btn btn btn-outline-info" @click="openCategoryProductModal(record.id)"><i class="fa fa-link"></i></button>
+            </td>
             <td>{{ record.name }}</td>
             <td v-if="record.color">
               <div :style="{ 'background-color': record.color, width: '100%', height: '20px' }"></div>
@@ -57,11 +60,13 @@
       :id="selected"
       @close="closeModalHandler"
     />
+    <CategoryProductModal v-if="showCategoryProductModal" :id="selected" @close="showCategoryProductModal = false" />
   </div>
 </template>
 
 <script>
 import CategoryModal from "@/components/CategoryModal";
+import CategoryProductModal from "../components/CategoryProductModal";
 
 export default {
   name: "Category",
@@ -77,10 +82,12 @@ export default {
     },
     showCreateModal: false,
     showUpdateModal: false,
+    showCategoryProductModal: false,
     selected: null
   }),
   components: {
-    CategoryModal
+    CategoryModal,
+    CategoryProductModal
   },
   methods: {
     changePageHandler(page) {
@@ -104,6 +111,10 @@ export default {
     openEditModal(id) {
       this.selected = id;
       this.showUpdateModal = true;
+    },
+    openCategoryProductModal(id) {
+      this.selected = id;
+      this.showCategoryProductModal = true;
     },
     async closeModalHandler() {
       await this.setTable();

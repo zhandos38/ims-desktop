@@ -3,7 +3,9 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <router-link class="btn btn-outline-danger" to="/"
+          ><i class="fa fa-arrow-left"></i> Назад</router-link
+        >
         <button
           class="btn btn-outline-success"
           type="button"
@@ -20,7 +22,7 @@
           <tr>
             <th>#</th>
             <th>Действия</th>
-            <th>Наименование</th>
+            <th>Полное имя</th>
             <th>Номер телефона</th>
             <th>Время создание</th>
           </tr>
@@ -31,8 +33,15 @@
             v-bind:key="record.id"
           >
             <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td><button class="btn btn-outline-info" @click="openEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
-            <td>{{ record.name }}</td>
+            <td>
+              <button
+                class="btn btn-outline-info"
+                @click="openEditModal(record.id)"
+              >
+                <i class="fa fa-pencil-alt"></i>
+              </button>
+            </td>
+            <td>{{ record.full_name }}</td>
             <td v-if="record.phone">
               {{ record.phone | VMask("7(###)###-##-##") }}
             </td>
@@ -50,11 +59,8 @@
         :container-class="'pagination'"
       />
     </div>
-    <SupplierModal
-      v-if="showCreateModal"
-      @close="closeModalHandler"
-    />
-    <SupplierModal
+    <CustomerModal v-if="showCreateModal" @close="closeModalHandler" />
+    <CustomerModal
       v-if="showUpdateModal"
       :id="selected"
       @close="closeModalHandler"
@@ -63,10 +69,10 @@
 </template>
 
 <script>
-import SupplierModal from "../components/SupplierModal";
+import CustomerModal from "../components/CustomerModal";
 
 export default {
-  name: "Supplier",
+  name: "Customer",
   computed: {
     dataProvider() {
       return (
@@ -85,10 +91,10 @@ export default {
     pageSize: 20,
     selected: null,
     showCreateModal: false,
-    showUpdateModal: false,
+    showUpdateModal: false
   }),
   components: {
-    SupplierModal
+    CustomerModal
   },
   methods: {
     changePageHandler(page) {
@@ -100,7 +106,7 @@ export default {
     async setTable() {
       this.loading = true;
 
-      await this.$store.dispatch("fetchSuppliers", {
+      await this.$store.dispatch("fetchCustomers", {
         page: this.page - 1,
         pageSize: this.pageSize
       });

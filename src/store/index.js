@@ -5,6 +5,7 @@ import invoice from "./invoice";
 import supplier from "./supplier";
 import category from "./category";
 import product from "./product";
+import customer from "./customer";
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     invoice,
     supplier,
     product,
-    category
+    category,
+    customer
   }
 });

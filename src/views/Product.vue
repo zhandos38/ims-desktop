@@ -3,8 +3,8 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
-        <button class="btn btn-success" @click="showProductCreateModal = true">
+        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <button class="btn btn-outline-success" @click="showProductCreateModal = true">
           Создать <i class="fa fa-plus"></i>
         </button>
       </div>
@@ -35,7 +35,7 @@
             v-bind:key="record.id"
           >
             <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td><button class="btn btn-info" @click="openProductEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
+            <td><button class="btn btn-outline-info" @click="openProductEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
             <td>{{ record.barcode }}</td>
             <td>{{ record.name }}</td>
             <td>{{ record.unit }}</td>
