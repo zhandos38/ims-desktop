@@ -12,12 +12,27 @@ module.exports = db.sequelize.define(
       username: {
         type: Sequelize.STRING,
       },
+        full_name: {
+            type: Sequelize.STRING,
+        },
       password_hash: {
         type: Sequelize.STRING
       },
       balance: {
         type: Sequelize.FLOAT
-      }
+      },
+        role: {
+            type: Sequelize.STRING,
+        },
+        status: {
+            type: Sequelize.STRING,
+        },
+        created_at: {
+            type: Sequelize.INTEGER,
+        },
+        updated_at: {
+            type: Sequelize.INTEGER,
+        }
     },
     {
       timestamps: false,

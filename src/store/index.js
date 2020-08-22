@@ -6,6 +6,7 @@ import supplier from "./supplier";
 import category from "./category";
 import product from "./product";
 import customer from "./customer";
+import staff from "./staff";
 
 Vue.use(Vuex);
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     supplier,
     product,
     category,
-    customer
+    customer,
+    staff
   }
 });

@@ -1,90 +1,30 @@
 <template>
   <div>
     <div class="object__title-wrapper">
-      <h1 class="object__title text-center">Объект</h1>
+      <h1 class="object__title text-center">Отчеты</h1>
     </div>
     <div class="menu">
       <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/report">
+          <router-link class="menu-link" to="/">
             <div class="menu-link__container">
               <div class="menu-link__icon">
-                <i class="fas fa-chart-pie"></i>
+                <i class="fas fa-arrow-left"></i>
               </div>
               <div class="menu-link__title">
-                Отчеты
+                Назад
               </div>
             </div>
           </router-link>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/product">
-            <div class="menu-link__item">
+          <router-link class="menu-link" to="#">
+            <div class="menu-link__container">
               <div class="menu-link__icon">
-                <i class="fas fa-warehouse" aria-hidden="true"></i>
+                <i class="fas fa-clipboard"></i>
               </div>
               <div class="menu-link__title">
-                Склад
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/category">
-            <div class="menu-link__item">
-              <div class="menu-link__icon">
-                <i class="far fa-list-alt"></i>
-              </div>
-              <div class="menu-link__title">
-                Категории
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/invoice">
-            <div class="menu-link__item">
-              <div class="menu-link__icon">
-                <i class="fas fa-file-invoice" aria-hidden="true"></i>
-              </div>
-              <div class="menu-link__title">
-                Накладные
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/staff">
-            <div class="menu-link__item">
-              <div class="menu-link__icon">
-                <i class="fas fa-address-card" aria-hidden="true"></i>
-              </div>
-              <div class="menu-link__title">
-                Сотрудники
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/customer">
-            <div class="menu-link__item">
-              <div class="menu-link__icon">
-                <i class="fas fa-users" aria-hidden="true"></i>
-              </div>
-              <div class="menu-link__title">
-                Клиенты
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="/supplier">
-            <div class="menu-link__item">
-              <div class="menu-link__icon">
-                <i class="fas fa-industry" aria-hidden="true"></i>
-              </div>
-              <div class="menu-link__title">
-                Поставщики
+                Заказы / Чеки
               </div>
             </div>
           </router-link>
@@ -93,10 +33,22 @@
           <router-link class="menu-link" to="#">
             <div class="menu-link__item">
               <div class="menu-link__icon">
-                <i class="fas fa-cogs"></i>
+                <i class="fas fa-boxes" aria-hidden="true"></i>
               </div>
               <div class="menu-link__title">
-                Настройки объекта
+                Отчеты по складу
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <router-link class="menu-link" to="#">
+            <div class="menu-link__item">
+              <div class="menu-link__icon">
+                <i class="fas fa-user-clock"></i>
+              </div>
+              <div class="menu-link__title">
+                Смены
               </div>
             </div>
           </router-link>
@@ -108,7 +60,31 @@
                 <i class="fas fa-cash-register"></i>
               </div>
               <div class="menu-link__title">
-                Кассы
+                Операции с кассой
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <router-link class="menu-link" to="#">
+            <div class="menu-link__item">
+              <div class="menu-link__icon">
+                <i class="far fa-calendar-alt" aria-hidden="true"></i>
+              </div>
+              <div class="menu-link__title">
+                Продажи по дням
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <router-link class="menu-link" to="#">
+            <div class="menu-link__item">
+              <div class="menu-link__icon">
+                <i class="far fa-calendar-alt" aria-hidden="true"></i>
+              </div>
+              <div class="menu-link__title">
+                Возвраты товаров
               </div>
             </div>
           </router-link>
