@@ -1,6 +1,6 @@
 export default {
   roles: {
-    "admin": "Цельный",
+    "admin": "Админ",
     "cashier": "Кассир",
     "director": "Директор",
     "administrator": "Администратор"
