@@ -1,8 +1,6 @@
 export default {
   roles: {
-    "admin": "Админ",
     "cashier": "Кассир",
-    "director": "Директор",
     "administrator": "Администратор"
   },
   statuses: {

@@ -3,7 +3,6 @@ import axios from "axios";
 export default {
   actions: {
     async login({ dispatch, commit }, { username, password }) {
-      console.log(username, password);
 
       try {
         await axios
@@ -12,7 +11,6 @@ export default {
             password: password
           })
           .then(function(response) {
-            console.log(response);
             commit("setUser", response.data);
           })
           .catch(error => {

@@ -1,8 +1,7 @@
 const express = require("express"),
   router = express.Router(),
-  Invoice = require("../models/invoice"),
-  { getPagination, getPagingData } = require("../functions"),
-  db = require("../database");
+  { Invoice, db } = require("../models/index"),
+  { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
   const { page, size } = req.query;

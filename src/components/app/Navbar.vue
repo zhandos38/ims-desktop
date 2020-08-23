@@ -12,11 +12,8 @@
                         <a class="dropdown-item" href="#" @click.prevent="logout">Выйти</a>
                     </div>
                 </div>
+                <div class="user-info__logo">IMS</div>
                 <div class="user-info__datetime">{{ date | date('datetime') }}</div>
-                <a class="user-balance__btn" href="#">
-                    <i class="fa fa-coins"></i>
-                    <p class="user-info__balance">{{ user.balance }}</p>
-                </a>
             </div>
         </div>
     </nav>
@@ -29,8 +26,7 @@ export default {
         date: new Date(),
         interval: null,
         user: {
-            username: null,
-            balance: null
+            username: null
         }
     }),
     methods: {

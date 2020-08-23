@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  Model = require("../models/category"),
+  { Category } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 
   const { limit, offset } = getPagination(page, size);
 
-  Model.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
+  Category.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
     .then(data => {
       const response = getPagingData(data, page, limit);
       res.json(response);
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/list", (req, res) => {
-  Model.findAll()
+  Category.findAll()
     .then(models => {
       res.json(models);
     })
@@ -32,12 +32,13 @@ router.post("/create", async (req, res) => {
   const { name, color } = req.body;
 
   try {
-    const supplier = await Model.create({
+    let category = await Category.create({
       name: name,
       color: color,
       created_at: Date.now() / 1000
     });
-    await supplier.save();
+    await category.save();
+
     res.status("200").send("Ok");
   } catch (err) {
     res.status("500").send("error: " + err);
@@ -48,7 +49,7 @@ router.post("/update", async (req, res) => {
   const dataForm = req.body;
 
   try {
-    let supplier = await Model.update(
+    await Category.update(
       { ...dataForm },
       {
         where: {
@@ -66,7 +67,7 @@ router.post("/update", async (req, res) => {
 router.get("/get-by-id", async (req, res) => {
   const { id } = req.query;
 
-  Model.findOne({
+  Category.findOne({
     where: {
       id: id
     }

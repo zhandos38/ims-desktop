@@ -1,6 +1,7 @@
 const express = require("express"),
     router = express.Router(),
-    Model = require("../models/user"),
+    { User } = require("../models/index"),
+    bcrypt = require("bcrypt"),
     { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -8,7 +9,7 @@ router.get("/", (req, res) => {
 
     const { limit, offset } = getPagination(page, size);
 
-    Model.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
+    User.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
         .then(data => {
             const response = getPagingData(data, page, limit);
             res.json(response);
@@ -19,32 +20,29 @@ router.get("/", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  console.log(req);
   const { username, password } = req.body;
 
-    Model.findOne({
+    User.findOne({
     where: {
       username: username
     }
   })
     .then(user => {
       if (!user) {
-        res.status("404").send("invalid username or password");
+        res.status("404").send("User is not found");
+        return;
       }
 
-      // bcrypt.compare(password, user.password_hash, function (err, result) {
-      //   if (result === true) {
-      //     console.log('hello')
-      //   } else {
-      //     console.log('error')
-      //     // return res.status('400').send('Incorrect password')
-      //   }
-      // })
-
-      res.status("200").send(user);
+      bcrypt.compare(password, user.password_hash, (err, result) => {
+        if (result) {
+            res.status("200").send(user);
+        } else {
+            res.status('404').send('Incorrect username or password');
+        }
+      });
     })
     .catch(err => {
-      return res.status("500").send("error: " + err);
+      res.status("500").send("error: " + err);
     });
 });
 
@@ -52,11 +50,19 @@ router.post("/create", async (req, res) => {
     const dataForm = req.body;
 
     try {
-        const supplier = await Model.create({
-            ...dataForm,
-            created_at: Date.now() / 1000
+        await bcrypt.hash(dataForm.password, 10, async (err, hash) => {
+            const user = await User.create({
+                username: dataForm.username,
+                full_name: dataForm.full_name,
+                role: dataForm.role,
+                status: dataForm.status,
+                password_hash: hash,
+                created_at: Date.now() / 1000,
+                updated_at: Date.now() / 1000
+            });
+
+            await user.save();
         });
-        await supplier.save();
 
         res.status("200").send("Ok");
     } catch (err) {
@@ -68,11 +74,40 @@ router.post("/update", async (req, res) => {
     const dataForm = req.body;
 
     try {
-        let supplier = await Model.update({ ...dataForm }, {
-            where: {
-                id: dataForm.id
-            }
-        });
+        if (dataForm.password) {
+            await bcrypt.hash(dataForm.password, 10, async (err, hash) => {
+
+                await User.update({
+                    username: dataForm.username,
+                    full_name: dataForm.full_name,
+                    role: dataForm.role,
+                    status: dataForm.status,
+                    password_hash: hash,
+                    updated_at: Date.now() / 1000
+                }, {
+                    where: {
+                        id: dataForm.id
+                    }
+                });
+
+                await user.save();
+            });
+        } else {
+
+            await User.update({
+                username: dataForm.username,
+                full_name: dataForm.full_name,
+                role: dataForm.role,
+                status: dataForm.status,
+                updated_at: Date.now() / 1000
+            }, {
+                where: {
+                    id: dataForm.id
+                }
+            });
+
+            await user.save();
+        }
 
         res.status("200").send("Ok");
     } catch (err) {
@@ -83,7 +118,7 @@ router.post("/update", async (req, res) => {
 router.get("/get-by-id", async (req, res) => {
     const { id } = req.query;
 
-    Model.findOne({
+    User.findOne({
         where: {
             id: id
         }

@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  Product = require("../models/product"),
+  { Product } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions"),
   { Op } = require("sequelize");
 
@@ -79,6 +79,7 @@ router.post("/create", async (req, res) => {
       updated_at: Date.now() / 1000
     });
     await product.save();
+
     res.status("200").send("Ok");
   } catch (err) {
     res.status("500").send("error: " + err);

@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  Barcode = require("../models/barcode");
+  { Barcode } = require("../models/index");
 
 router.get("/search-by-barcode", (req, res) => {
     const { barcode } = req.query;

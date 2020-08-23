@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  Supplier = require("../models/supplier"),
+  { Supplier } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -38,6 +38,7 @@ router.post("/create", async (req, res) => {
       created_at: Date.now() / 1000
     });
     await supplier.save();
+
     res.status("200").send("Ok");
   } catch (err) {
     res.status("500").send("error: " + err);
@@ -48,7 +49,7 @@ router.post("/update", async (req, res) => {
   const dataForm = req.body;
 
   try {
-    let supplier = await Supplier.update({ ...dataForm }, {
+    await Supplier.update({ ...dataForm }, {
       where: {
         id: dataForm.id
       }
