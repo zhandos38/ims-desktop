@@ -1,61 +1,40 @@
-const Sequelize = require("sequelize");
-const db = require("../database");
-
-module.exports = db.sequelize.define(
-  "product",
-  {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    name: {
-      type: Sequelize.STRING
-    },
-    barcode: {
-      type: Sequelize.STRING
-    },
-    quantity: {
-      type: Sequelize.DECIMAL
-    },
-    category_id: {
-      type: Sequelize.INTEGER
-    },
-    price_retail: {
-      type: Sequelize.DECIMAL
-    },
-    price_wholesale: {
-      type: Sequelize.DECIMAL
-    },
-    percentage_rate: {
-      type: Sequelize.TINYINT
-    },
-    wholesale_value: {
-      type: Sequelize.TINYINT
-    },
-    unit: {
-      type: Sequelize.STRING
-    },
-    type: {
-      type: Sequelize.TINYINT
-    },
-    is_piece: {
-      type: Sequelize.TINYINT
-    },
-    piece_quantity: {
-      type: Sequelize.TINYINT
-    },
-    piece_price: {
-      type: Sequelize.TINYINT
-    },
-    status: {
-      type: Sequelize.TINYINT
-    },
-    created_at: {
-      type: Sequelize.INTEGER
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Product extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-  },
-  {
+  };
+  Product.init({
+    name: DataTypes.STRING,
+    barcode: DataTypes.STRING,
+    quantity: DataTypes.DECIMAL,
+    category_id: DataTypes.INTEGER,
+    price_retail: DataTypes.INTEGER,
+    price_wholesale: DataTypes.DECIMAL,
+    percentage_rate: DataTypes.TINYINT,
+    wholesale_value: DataTypes.TINYINT,
+    unit: DataTypes.STRING,
+    type: DataTypes.TINYINT,
+    is_piece: DataTypes.TINYINT,
+    piece_quantity: DataTypes.TINYINT,
+    piece_price: DataTypes.TINYINT,
+    status: DataTypes.TINYINT,
+    created_at: DataTypes.INTEGER,
+    updated_at: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Product',
+    freezeTableName: true,
     timestamps: false
-  }
-);
+  });
+  return Product;
+};
