@@ -4,9 +4,7 @@ export default {
   actions: {
     async fetchStaff({ commit }, { page = 0, pageSize = 20 }) {
       const data = await (
-        await fetch(
-          `http://localhost:4040/user/?page=${page}&size=${pageSize}`
-        )
+        await fetch(`http://localhost:4040/user/?page=${page}&size=${pageSize}`)
       ).json();
 
       commit("setDataProvider", data);
@@ -31,16 +29,16 @@ export default {
     async updateStaff({ dispatch, commit }, dataForm) {
       try {
         await axios
-            .post("http://localhost:4040/user/update", dataForm)
-            .then(async response => {
-              this._vm.$toast.open("Сотрудник успешно обновлен");
-            })
-            .catch(error => {
-              this._vm.$toast.open(
-                  "Произошло ошибка, обратитесь в службу поддержки"
-              );
-              throw error;
-            });
+          .post("http://localhost:4040/user/update", dataForm)
+          .then(async response => {
+            this._vm.$toast.open("Сотрудник успешно обновлен");
+          })
+          .catch(error => {
+            this._vm.$toast.open(
+              "Произошло ошибка, обратитесь в службу поддержки"
+            );
+            throw error;
+          });
       } catch (e) {
         throw e;
       }

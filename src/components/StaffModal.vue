@@ -7,7 +7,9 @@
         <div class="col-md-6">
           <div
             class="form-group"
-            :class="{ 'has-error': $v.full_name.$dirty && !$v.full_name.required }"
+            :class="{
+              'has-error': $v.full_name.$dirty && !$v.full_name.required
+            }"
           >
             <label for="supplier-name">Ф.И.О</label>
             <input
@@ -21,23 +23,27 @@
         </div>
         <div class="col-md-6">
           <div
-                  class="form-group"
-                  :class="{ 'has-error': $v.username.$dirty && !$v.username.required }"
+            class="form-group"
+            :class="{
+              'has-error': $v.username.$dirty && !$v.username.required
+            }"
           >
             <label for="supplier-login">Логин</label>
             <input
-                    id="supplier-login"
-                    class="form-control"
-                    type="text"
-                    placeholder="Введите логин"
-                    v-model="username"
+              id="supplier-login"
+              class="form-control"
+              type="text"
+              placeholder="Введите логин"
+              v-model="username"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div
             class="form-group"
-            :class="{ 'has-error': $v.password.$dirty && !$v.password.required }"
+            :class="{
+              'has-error': $v.password.$dirty && !$v.password.required
+            }"
           >
             <label for="supplier-password">Пароль</label>
             <input
@@ -57,7 +63,12 @@
             <label for="supplier-role">Роль</label>
             <select id="supplier-role" class="form-control" v-model="role">
               <option value="null">Выбрать роль</option>
-              <option v-for="(role, name, index) of roles" v-bind:key="index" :value="name">{{ role }}</option>
+              <option
+                v-for="(role, name, index) of roles"
+                v-bind:key="index"
+                :value="name"
+                >{{ role }}</option
+              >
             </select>
           </div>
         </div>
@@ -69,7 +80,12 @@
             <label for="supplier-status">Статус</label>
             <select id="supplier-status" class="form-control" v-model="status">
               <option value="null">Выбрать статус</option>
-              <option v-for="(status, name, index) of statuses" v-bind:key="index" :value="name">{{ status }}</option>
+              <option
+                v-for="(status, name, index) of statuses"
+                v-bind:key="index"
+                :value="name"
+                >{{ status }}</option
+              >
             </select>
           </div>
         </div>
