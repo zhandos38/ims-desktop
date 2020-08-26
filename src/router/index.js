@@ -63,6 +63,12 @@ const routes = [
     path: "/staff",
     name: "staff",
     component: () => import("@/views/Staff.vue")
+  },
+  {
+    path: "/order",
+    name: "order",
+    meta: { layout: "full" },
+    component: () => import("@/views/Order.vue")
   }
 ];
 

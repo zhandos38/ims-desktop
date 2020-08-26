@@ -7,6 +7,7 @@ import category from "./category";
 import product from "./product";
 import customer from "./customer";
 import staff from "./staff";
+import order from "./order";
 
 Vue.use(Vuex);
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     product,
     category,
     customer,
-    staff
+    staff,
+    order
   }
 });
