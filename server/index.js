@@ -11,6 +11,8 @@ const routeBarcode = require("./routes/barcode");
 const routeCategory = require("./routes/category");
 const routeCustomer = require("./routes/customer");
 const routeOrder = require("./routes/order");
+const routeCashbox = require("./routes/cashbox");
+const routeShift = require("./routes/shift");
 
 const app = express();
 const port = 4040;
@@ -28,6 +30,8 @@ app.use("/barcode", routeBarcode);
 app.use("/category", routeCategory);
 app.use("/customer", routeCustomer);
 app.use("/order", routeCustomer);
+app.use("/cashbox", routeCashbox);
+app.use("/shift", routeShift);
 
 // starting the server
 app.listen(port, () => console.log(`Server started, listening port: ${port}`));

@@ -69,6 +69,12 @@ const routes = [
     name: "order",
     meta: { layout: "full" },
     component: () => import("@/views/Order.vue")
+  },
+  {
+    path: "/cashbox",
+    name: "cashbox",
+    meta: { layout: "full" },
+    component: () => import("@/views/Cashbox.vue")
   }
 ];
 

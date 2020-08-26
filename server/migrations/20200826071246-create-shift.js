@@ -1,46 +1,49 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("invoice_items", {
+    await queryInterface.createTable("Shift", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      invoice_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "invoice"
+            tableName: "User"
           },
           key: "id"
         }
       },
-      product_id: {
+      cashbox_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "product"
+            tableName: "Cashbox"
           },
           key: "id"
         }
       },
-      barcode: {
-        type: Sequelize.STRING
-      },
-      name: {
-        type: Sequelize.STRING
-      },
-      quantity: {
+      sum_at_open: {
         type: Sequelize.DECIMAL
       },
-      price_in: {
+      sum_at_close: {
         type: Sequelize.DECIMAL
+      },
+      status: {
+        type: Sequelize.BOOLEAN
+      },
+      opened_at: {
+        type: Sequelize.INTEGER
+      },
+      closed_at: {
+        type: Sequelize.INTEGER
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("invoice_items");
+    await queryInterface.dropTable("Shift");
   }
 };

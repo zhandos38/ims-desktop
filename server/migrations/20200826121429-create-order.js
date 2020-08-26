@@ -58,7 +58,13 @@ module.exports = {
         type: Sequelize.DECIMAL
       },
       shift_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "Shift"
+          },
+          key: "id"
+        }
       },
       comment: {
         type: Sequelize.TEXT
@@ -68,14 +74,6 @@ module.exports = {
       },
       updated_at: {
         type: Sequelize.INTEGER
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },
