@@ -17,6 +17,15 @@ module.exports = {
       password_hash: {
         type: Sequelize.STRING
       },
+      cashbox_id: {
+        type: Sequelize.INTEGER,
+        preferences: {
+          model: {
+            tableName: "cashbox"
+          },
+          key: "id"
+        }
+      },
       role: {
         type: Sequelize.STRING
       },

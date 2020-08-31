@@ -96,6 +96,10 @@ export default {
     async setTable() {
       this.loading = true;
 
+      if (this.$route.query.page) {
+        this.page = +this.$route.query.page;
+      }
+
       await this.$store.dispatch("fetchStaff", {
         page: this.page - 1,
         pageSize: this.pageSize
@@ -122,12 +126,6 @@ export default {
     }
   },
   async mounted() {
-    if (this.$route.query.page) {
-      this.page = +this.$route.query.page;
-    }
-
-    console.log(this.$store.state.staff);
-
     await this.setTable();
   }
 };

@@ -54,9 +54,10 @@ router.post("/create", async (req, res) => {
       const user = await User.create({
         username: dataForm.username,
         full_name: dataForm.full_name,
+        password_hash: hash,
+        cashbox_id: dataForm.cashbox_id,
         role: dataForm.role,
         status: dataForm.status,
-        password_hash: hash,
         created_at: Date.now() / 1000,
         updated_at: Date.now() / 1000
       });

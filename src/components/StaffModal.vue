@@ -11,9 +11,9 @@
               'has-error': $v.full_name.$dirty && !$v.full_name.required
             }"
           >
-            <label for="supplier-name">Ф.И.О</label>
+            <label for="staff-name">Ф.И.О</label>
             <input
-              id="supplier-name"
+              id="staff-name"
               class="form-control"
               type="text"
               placeholder="Введите полное имя"
@@ -28,9 +28,9 @@
               'has-error': $v.username.$dirty && !$v.username.required
             }"
           >
-            <label for="supplier-login">Логин</label>
+            <label for="staff-login">Логин</label>
             <input
-              id="supplier-login"
+              id="staff-login"
               class="form-control"
               type="text"
               placeholder="Введите логин"
@@ -45,9 +45,9 @@
               'has-error': $v.password.$dirty && !$v.password.required
             }"
           >
-            <label for="supplier-password">Пароль</label>
+            <label for="staff-password">Пароль</label>
             <input
-              id="supplier-password"
+              id="staff-password"
               class="form-control"
               type="password"
               placeholder="Введите пароль"
@@ -60,14 +60,31 @@
             class="form-group"
             :class="{ 'has-error': $v.role.$dirty && !$v.role.required }"
           >
-            <label for="supplier-role">Роль</label>
-            <select id="supplier-role" class="form-control" v-model="role">
+            <label for="staff-role">Роль</label>
+            <select id="staff-role" class="form-control" v-model="role">
               <option value="null">Выбрать роль</option>
               <option
                 v-for="(role, name, index) of roles"
                 v-bind:key="index"
                 :value="name"
                 >{{ role }}</option
+              >
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div
+            class="form-group"
+            :class="{ 'has-error': $v.cashbox_id.$dirty && !$v.cashbox_id.required }"
+          >
+            <label for="staff-cashbox">Касса</label>
+            <select id="staff-cashbox" class="form-control" v-model="cashbox_id">
+              <option value="null">Выбрать кассу</option>
+              <option
+                v-for="(cashbox, name, index) of cashboxes"
+                v-bind:key="index"
+                :value="cashbox.id"
+              >{{ cashbox.name }}</option
               >
             </select>
           </div>
@@ -127,15 +144,18 @@ export default {
     username: null,
     full_name: null,
     password: null,
+    cashbox_id: null,
     status: null,
     role: null,
     roles: [],
-    statuses: []
+    statuses: [],
+    cashboxes: []
   }),
   validations: {
     username: { required },
     full_name: { required },
     password: { required },
+    cashbox_id: { required },
     status: { required },
     role: { required }
   },
@@ -148,6 +168,7 @@ export default {
       this.username = user.username;
       this.full_name = user.full_name;
       this.password = "no-pass";
+      this.cashbox_id = user.cashbox_id;
       this.status = user.status;
       this.role = user.role;
     },
@@ -162,6 +183,7 @@ export default {
           id: this.id,
           username: this.username,
           full_name: this.full_name,
+          cashbox_id: this.cashbox_id,
           password: this.password !== "no-pass" ? this.password : null,
           status: this.status,
           role: this.role
@@ -171,6 +193,7 @@ export default {
           username: this.username,
           full_name: this.full_name,
           password: this.password,
+          cashbox_id: this.cashbox_id,
           status: this.status,
           role: this.role
         });
@@ -182,22 +205,26 @@ export default {
       this.username = null;
       this.full_name = null;
       this.status = null;
+      this.cashbox_id = null;
       this.role = null;
 
       this.$emit("close");
     }
   },
   async mounted() {
+    this.showLoader = false;
     if (this.id) {
       await this.setForm();
     }
 
+    this.cashboxes = await (
+      await fetch(
+        `http://localhost:4040/cashbox/list`
+      )
+    ).json();
+
     this.roles = User.roles;
     this.statuses = User.statuses;
-
-    console.log(User);
-
-    this.showLoader = false;
   }
 };
 </script>

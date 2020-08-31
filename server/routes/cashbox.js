@@ -34,6 +34,18 @@ router.post("/create", async (req, res) => {
   }
 });
 
+router.get("/list", async (req, res) => {
+  const { id } = req.query;
+
+  Cashbox.findAll()
+      .then(data => {
+        res.json(data);
+      })
+      .catch(err => {
+        res.send("error: " + err);
+      });
+});
+
 router.get("/get", async (req, res) => {
   const { id } = req.query;
 
