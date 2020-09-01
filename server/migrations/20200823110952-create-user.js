@@ -19,6 +19,7 @@ module.exports = {
       },
       cashbox_id: {
         type: Sequelize.INTEGER,
+        defaultValue: null,
         preferences: {
           model: {
             tableName: "cashbox"

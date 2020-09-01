@@ -33,7 +33,8 @@ module.exports = {
         type: Sequelize.DECIMAL
       },
       status: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0
       },
       opened_at: {
         type: Sequelize.INTEGER

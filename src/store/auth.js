@@ -40,7 +40,9 @@ export default {
   state: {
     user: {
       username: null,
-      bill: null
+      full_name: null,
+      role: null,
+      status: null
     }
   },
   getters: {

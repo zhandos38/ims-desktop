@@ -24,11 +24,33 @@ router.post("/create", async (req, res) => {
   try {
     const shift = await Shift.create({
       ...dataForm,
-      created_at: Date.now() / 1000
+      opened_at: Date.now() / 1000
     });
     await shift.save();
 
-    res.status("200").send("Ok");
+    res.json(shift);
+  } catch (err) {
+    res.status("500").send("error: " + err);
+  }
+});
+
+router.post("/update", async (req, res) => {
+  const dataForm = req.body;
+
+  try {
+	const shift = await Shift.findOne({
+		where: {
+			id: dataForm.id
+		}
+	});
+
+	shift.status = true;
+	shift.sum_at_close = dataForm.sum_at_close;
+	shift.closed_at = Date.now() / 1000;
+
+	await shift.save();
+
+    res.json(shift);
   } catch (err) {
     res.status("500").send("error: " + err);
   }
@@ -41,6 +63,25 @@ router.get("/get", async (req, res) => {
     where: {
       id: id
     }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/get-last", async (req, res) => {
+  const { id } = req.query;
+
+  Shift.findOne({
+    where: {
+      user_id: id
+    },
+    order: [
+      ['id', 'DESC']
+    ]
   })
     .then(data => {
       res.json(data);
