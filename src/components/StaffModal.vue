@@ -73,18 +73,19 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div
-            class="form-group"
-            :class="{ 'has-error': $v.cashbox_id.$dirty && !$v.cashbox_id.required }"
-          >
+          <div class="form-group">
             <label for="staff-cashbox">Касса</label>
-            <select id="staff-cashbox" class="form-control" v-model="cashbox_id">
+            <select
+              id="staff-cashbox"
+              class="form-control"
+              v-model="cashbox_id"
+            >
               <option value="null">Выбрать кассу</option>
               <option
                 v-for="(cashbox, name, index) of cashboxes"
                 v-bind:key="index"
                 :value="cashbox.id"
-              >{{ cashbox.name }}</option
+                >{{ cashbox.name }}</option
               >
             </select>
           </div>
@@ -155,7 +156,6 @@ export default {
     username: { required },
     full_name: { required },
     password: { required },
-    cashbox_id: { required },
     status: { required },
     role: { required }
   },
@@ -218,9 +218,7 @@ export default {
     }
 
     this.cashboxes = await (
-      await fetch(
-        `http://localhost:4040/cashbox/list`
-      )
+      await fetch(`http://localhost:4040/cashbox/list`)
     ).json();
 
     this.roles = User.roles;

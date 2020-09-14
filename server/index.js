@@ -29,7 +29,7 @@ app.use("/product", routeProduct);
 app.use("/barcode", routeBarcode);
 app.use("/category", routeCategory);
 app.use("/customer", routeCustomer);
-app.use("/order", routeCustomer);
+app.use("/order", routeOrder);
 app.use("/cashbox", routeCashbox);
 app.use("/shift", routeShift);
 

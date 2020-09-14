@@ -30,16 +30,16 @@ module.exports = {
       cost: {
         type: Sequelize.DECIMAL
       },
-      amount_discount: {
+      discount_amount: {
         type: Sequelize.DECIMAL
       },
       cost_total: {
         type: Sequelize.DECIMAL
       },
-      amount_card: {
+      card_amount: {
         type: Sequelize.DECIMAL
       },
-      amount_cash: {
+      cash_amount: {
         type: Sequelize.DECIMAL
       },
       pay_method: {
@@ -54,7 +54,7 @@ module.exports = {
       is_debt: {
         type: Sequelize.BOOLEAN
       },
-      amount_debt: {
+      debt_amount: {
         type: Sequelize.DECIMAL
       },
       shift_id: {

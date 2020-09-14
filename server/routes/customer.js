@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { Customer } = require("../models/index"),
+  { Customer, Sequelize } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -69,6 +69,29 @@ router.get("/get-by-id", async (req, res) => {
   Customer.findOne({
     where: {
       id: id
+    }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/search", async (req, res) => {
+  const { name, phone } = req.query;
+
+  Customer.findAll({
+    where: {
+	  	[Sequelize.Op.or]: {
+  			full_name: {
+	      		[Sequelize.Op.like]: `%${name}%`
+	      	},
+      		phone: {
+	      		[Sequelize.Op.like]: `%${phone}%`
+	      	}
+	  	}
     }
   })
     .then(data => {

@@ -64,12 +64,38 @@ router.post("/update", async (req, res) => {
   }
 });
 
+router.get("/get-all", async (req, res) => {
+  Category.findAll()
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
 router.get("/get-by-id", async (req, res) => {
   const { id } = req.query;
 
   Category.findOne({
     where: {
       id: id
+    }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/get-by-category", async (req, res) => {
+  const { id } = req.query;
+
+  Category.findAll({
+    where: {
+      category_id: id
     }
   })
     .then(data => {

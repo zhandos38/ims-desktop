@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       wholesale_value: DataTypes.TINYINT,
       unit: DataTypes.STRING,
       type: DataTypes.TINYINT,
-      is_piece: DataTypes.TINYINT,
       piece_quantity: DataTypes.TINYINT,
       piece_price: DataTypes.TINYINT,
       status: DataTypes.TINYINT,

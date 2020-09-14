@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { Order } = require("../models/index"),
+  { Order, OrderItems } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -22,11 +22,16 @@ router.post("/create", async (req, res) => {
   const dataForm = req.body;
 
   try {
-    const supplier = await Order.create({
+    const order = await Order.create({
       ...dataForm,
-      created_at: Date.now() / 1000
+      created_at: Date.now() / 1000,
+      updated_at: Date.now() / 1000
     });
-    await supplier.save();
+    await order.save();
+
+    dataForm.products.forEach(async function(item) {
+      await order.createOrderItem(item);
+    });
 
     res.status("200").send("Ok");
   } catch (err) {
@@ -41,6 +46,25 @@ router.get("/get", async (req, res) => {
     where: {
       id: id
     }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/get-by-number", async (req, res) => {
+  const { number } = req.query;
+
+  Order.findOne({
+    where: {
+      number: number
+    },
+    include: [
+      { model: OrderItems }
+    ]
   })
     .then(data => {
       res.json(data);

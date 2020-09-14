@@ -8,7 +8,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Order.hasMany(models.OrderItems, {
+        foreignKey: {
+          name: 'order_id',
+          allowNull: false
+        }
+      })
     }
   }
   Order.init(
@@ -17,15 +22,15 @@ module.exports = (sequelize, DataTypes) => {
       created_by: DataTypes.INTEGER,
       customer_id: DataTypes.INTEGER,
       cost: DataTypes.DECIMAL,
-      amount_discount: DataTypes.DECIMAL,
+      discount_amount: DataTypes.DECIMAL,
       cost_total: DataTypes.DECIMAL,
-      amount_card: DataTypes.DECIMAL,
-      amount_cash: DataTypes.DECIMAL,
+      card_amount: DataTypes.DECIMAL,
+      cash_amount: DataTypes.DECIMAL,
       pay_method: DataTypes.TINYINT(3),
       pay_status: DataTypes.TINYINT(3),
       status: DataTypes.TINYINT(2),
       is_debt: DataTypes.BOOLEAN,
-      amount_debt: DataTypes.DECIMAL,
+      debt_amount: DataTypes.DECIMAL,
       shift_id: DataTypes.INTEGER,
       comment: DataTypes.TEXT,
       created_at: DataTypes.INTEGER,

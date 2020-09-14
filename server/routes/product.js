@@ -105,7 +105,7 @@ router.post("/update", async (req, res) => {
   }
 });
 
-router.get("/get-by-id", (req, res) => {
+router.get("/get", (req, res) => {
   const { id } = req.query;
 
   Product.findOne({

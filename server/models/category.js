@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       color: DataTypes.STRING,
+      parent_id: DataTypes.INTEGER,
       created_at: DataTypes.INTEGER
     },
     {

@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "OrderItems",
+      tableName: "order_items",
       freezeTableName: true,
       timestamps: false
     }

@@ -44,9 +44,6 @@ module.exports = {
       type: {
         type: Sequelize.TINYINT
       },
-      is_piece: {
-        type: Sequelize.TINYINT
-      },
       piece_quantity: {
         type: Sequelize.TINYINT
       },
