@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("order_items", {
+    await queryInterface.createTable('customer_debt_history', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      product_id: {
+      customer_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "product"
+            tableName: "customer"
           },
           key: "id"
         }
@@ -26,32 +26,36 @@ module.exports = {
           key: "id"
         }
       },
-      name: {
-        type: Sequelize.STRING
+      staff_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "user"
+          },
+          key: "id"
+        }
       },
-      barcode: {
-        type: Sequelize.STRING
+      shift_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "shift"
+          },
+          key: "id"
+        }
       },
-      quantity: {
+      sum: {
         type: Sequelize.DECIMAL
-      },
-      price: {
-        type: Sequelize.DECIMAL,
-        defaultValue: 0,
-      },
-      status: {
-        type: Sequelize.TINYINT,
-        defaultValue: 1
       },
       created_at: {
         type: Sequelize.INTEGER
       },
       updated_at: {
         type: Sequelize.INTEGER
-      }
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("order_items");
+    await queryInterface.dropTable('customer_debt_history');
   }
 };

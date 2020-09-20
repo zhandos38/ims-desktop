@@ -73,8 +73,17 @@ const routes = [
   {
     path: "/cashbox",
     name: "cashbox",
-    meta: { layout: "full" },
     component: () => import("@/views/Cashbox.vue")
+  },
+  {
+    path: "/revision",
+    name: "revision",
+    component: () => import("@/views/Revision.vue")
+  },
+  {
+    path: "/shift",
+    name: "shift",
+    component: () => import("@/views/Shift.vue")
   }
 ];
 

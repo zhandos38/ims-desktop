@@ -22,6 +22,7 @@
             <th>Сумма скидки</th>
             <th>Оплачено наличкой</th>
             <th>Оплачено картой</th>
+<!--            <th>Метод оплаты</th>-->
             <th>Тип оплаты</th>
             <th>Статус</th>
             <th>В долг</th>
@@ -43,15 +44,15 @@
             <td>{{ record.created_by }}</td>
             <td>{{ record.customer_id }}</td>
             <td>{{ record.cost }}</td>
-            <td>{{ record.cost_discount }}</td>
+            <td>{{ record.discount_amount }}</td>
             <td>{{ record.cost_total }}</td>
-            <td>{{ record.taken_cash }}</td>
-            <td>{{ record.taken_card }}</td>
-            <td>{{ record.pay_method_id }}</td>
-            <td>{{ record.pay_status_id }}</td>
+            <td>{{ record.cash_amount }}</td>
+            <td>{{ record.card_amount }}</td>
+<!--            <td>{{ record.method }}</td>-->
+            <td>{{ record.pay_status }}</td>
             <td>{{ record.status }}</td>
             <td>{{ record.is_debt }}</td>
-            <td>{{ record.debt_sum }}</td>
+            <td>{{ record.debt_amount }}</td>
             <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
           </tr>
         </tbody>

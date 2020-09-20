@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { Customer, Sequelize } = require("../models/index"),
+  { Sequelize, Customer, CustomerDebtHistory } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -56,6 +56,37 @@ router.post("/update", async (req, res) => {
         }
       }
     );
+
+    res.status("200").send("Ok");
+  } catch (err) {
+    res.status("500").send("error: " + err);
+  }
+});
+
+router.post("/repayment", async (req, res) => {
+  const { id, staff_id, shift_id, sum } = req.body;
+
+  try {
+    const customer = await Customer.findOne({ where: { id: id } });
+    if (!customer) {
+      throw "Customer is not found";
+    }
+
+    if (customer.debt_sum < sum) {
+      throw "Sum error";
+    }
+
+    const customerDebtHistory = await CustomerDebtHistory.create({
+        customer_id: id,
+        staff_id: staff_id,
+        shift_id: shift_id,
+        sum: sum,
+        created_at: Date.now() / 1000,
+        updated_at: Date.now() / 1000
+      });
+
+    customer.debt_sum = parseFloat(customer.debt_sum) - parseFloat(customerDebtHistory.sum);
+    customer.save();
 
     res.status("200").send("Ok");
   } catch (err) {

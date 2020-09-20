@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
           name: 'order_id',
           allowNull: false
         }
-      })
+      });
+      Order.belongsTo(models.Customer, {
+        foreignKey: 'customer_id'
+      });
     }
   }
   Order.init(

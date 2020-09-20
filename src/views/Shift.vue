@@ -52,7 +52,7 @@
         :container-class="'pagination'"
       />
     </div>
-    <CashboxModal v-if="openViewModal" @close="closeModalHandler" />
+    <ShiftModal v-if="openViewModal" @close="closeModalHandler" />
   </div>
 </template>
 

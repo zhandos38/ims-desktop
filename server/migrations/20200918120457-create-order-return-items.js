@@ -1,57 +1,57 @@
-"use strict";
+'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("order_items", {
+    await queryInterface.createTable('order_return_items', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      product_id: {
+      order_return_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "product"
+            tableName: 'order_return'
           },
-          key: "id"
+          key: 'id'
         }
       },
-      order_id: {
+      order_items_id: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "order"
+            tableName: 'order_items'
           },
-          key: "id"
+          key: 'id'
         }
       },
-      name: {
+      product_name: {
         type: Sequelize.STRING
       },
-      barcode: {
-        type: Sequelize.STRING
+      shift_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'shift'
+          },
+          key: 'id'
+        }
       },
       quantity: {
         type: Sequelize.DECIMAL
       },
       price: {
-        type: Sequelize.DECIMAL,
-        defaultValue: 0,
-      },
-      status: {
-        type: Sequelize.TINYINT,
-        defaultValue: 1
+        type: Sequelize.DECIMAL
       },
       created_at: {
         type: Sequelize.INTEGER
-      },
-      updated_at: {
-        type: Sequelize.INTEGER
       }
+    }, {
+      freezeTableName: true
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("order_items");
+    await queryInterface.dropTable('order_return_items');
   }
 };

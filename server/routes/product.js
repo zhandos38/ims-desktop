@@ -138,11 +138,11 @@ router.get("/get-by-category", (req, res) => {
 });
 
 router.post("/set-category", (req, res) => {
-  const { categoryId, newLinkedProductIds, unlinkedProductIds } = req.body;
+  const { categoryId, newLinkedProductsIds, unlinkedProductIds } = req.body;
 
   try {
-    if (typeof newLinkedProductIds !== "undefined") {
-      newLinkedProductIds.forEach(async id => {
+    if (typeof newLinkedProductsIds !== "undefined") {
+      newLinkedProductsIds.forEach(async id => {
         await Product.update(
           {
             category_id: categoryId
@@ -174,6 +174,24 @@ router.post("/set-category", (req, res) => {
     res.status("200").send("Ok");
   } catch (err) {
     res.status("500").send("error: " + err);
+  }
+});
+
+router.post("/revision", async (req, res) => {
+  const { products } = req.body;
+
+  try {
+    for (product of products) {
+      await Product.update(product, {
+        where: {
+          id: product.id
+        }
+      });
+    }
+
+    res.status("200").send("Ok");
+  } catch (err) {
+    res.send("error: " + err);
   }
 });
 

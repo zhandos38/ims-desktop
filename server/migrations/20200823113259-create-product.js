@@ -26,11 +26,17 @@ module.exports = {
           key: "id"
         }
       },
+      price_in: {
+        type: Sequelize.DECIMAL,
+        defaultValue: 0
+      },
       price_retail: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL,
+        defaultValue: 0
       },
       price_wholesale: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL,
+        defaultValue: 0
       },
       percentage_rate: {
         type: Sequelize.TINYINT

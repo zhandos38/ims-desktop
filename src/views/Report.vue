@@ -42,7 +42,7 @@
           </router-link>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-3">
-          <router-link class="menu-link" to="#">
+          <router-link class="menu-link" to="/shift">
             <div class="menu-link__item">
               <div class="menu-link__icon">
                 <i class="fas fa-user-clock"></i>
