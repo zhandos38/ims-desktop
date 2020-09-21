@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { Shift } = require("../models/index"),
+  { User, Shift, Cashbox } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -8,7 +8,15 @@ router.get("/", (req, res) => {
 
   const { limit, offset } = getPagination(page, size);
 
-  Shift.findAndCountAll({ limit, offset, order: [["id", "DESC"]] })
+  Shift.findAndCountAll({
+    include: [
+      User,
+      Cashbox
+    ],
+    limit,
+    offset,
+    order: [["id", "DESC"]]
+  })
     .then(data => {
       const response = getPagingData(data, page, limit);
       res.json(response);
@@ -38,17 +46,17 @@ router.post("/update", async (req, res) => {
   const dataForm = req.body;
 
   try {
-	const shift = await Shift.findOne({
-		where: {
-			id: dataForm.id
-		}
-	});
+    const shift = await Shift.findOne({
+      where: {
+        id: dataForm.id
+      }
+    });
 
-	shift.status = true;
-	shift.sum_at_close = dataForm.sum_at_close;
-	shift.closed_at = Date.now() / 1000;
+    shift.status = true;
+    shift.sum_at_close = dataForm.sum_at_close;
+    shift.closed_at = Date.now() / 1000;
 
-	await shift.save();
+    await shift.save();
 
     res.json(shift);
   } catch (err) {
@@ -60,6 +68,10 @@ router.get("/get", async (req, res) => {
   const { id } = req.query;
 
   Shift.findOne({
+    include: [
+      User,
+      Cashbox
+    ],
     where: {
       id: id
     }
@@ -79,9 +91,7 @@ router.get("/get-last", async (req, res) => {
     where: {
       user_id: id
     },
-    order: [
-      ['id', 'DESC']
-    ]
+    order: [["id", "DESC"]]
   })
     .then(data => {
       res.json(data);

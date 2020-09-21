@@ -8,7 +8,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Shift.belongsTo(models.User, {
+        foreignKey: {
+          name: "user_id",
+          allowNull: false
+        }
+      });
+      Shift.belongsTo(models.Cashbox, {
+        foreignKey: {
+          name: "cashbox_id",
+          allowNull: false
+        }
+      });
     }
   }
   Shift.init(

@@ -9,6 +9,7 @@ import customer from "./customer";
 import staff from "./staff";
 import order from "./order";
 import cashbox from "./cashbox";
+import shift from "./shift";
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     customer,
     staff,
     order,
-    cashbox
+    cashbox,
+    shift
   }
 });

@@ -3,7 +3,7 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-info" to="/invoice"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <router-link class="btn btn-outline-danger" to="/invoice"><i class="fa fa-arrow-left"></i> Назад</router-link>
       </div>
       <div class="invoice-create__item">
         <div class="row">

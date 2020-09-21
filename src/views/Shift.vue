@@ -3,16 +3,9 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"
+        <router-link class="btn btn-outline-danger" to="/report"
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
-        <button
-          class="btn btn-outline-success"
-          type="button"
-          @click="showCreateModal = true"
-        >
-          Создать <i class="fa fa-plus"></i>
-        </button>
       </div>
       <div>
         <small>Всего записей: {{ dataProvider.totalItems }}</small>
@@ -21,10 +14,11 @@
         <thead>
           <tr>
             <th>Действия</th>
-            <th>Наименование</th>
+            <th>Кассир</th>
+            <th>Касса</th>
             <th>Статус</th>
-            <th>Дата открытия</th>
-            <th>Дата закрытия</th>
+            <th>Время открытия</th>
+            <th>Время закрытия</th>
           </tr>
         </thead>
         <tbody>
@@ -37,9 +31,11 @@
                 <i class="fa fa-eye"></i>
               </button>
             </td>
-            <td>{{ record.name }}</td>
-            <td>{{ record.balance }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            <td>{{ record.User.full_name }}</td>
+            <td>{{ record.Cashbox.name }}</td>
+            <td>{{ record.status ? "Включен" : "Отключен" }}</td>
+            <td>{{ new Date(record.opened_at * 1000).toLocaleString() }}</td>
+            <td>{{ new Date(record.closed_at * 1000).toLocaleString() }}</td>
           </tr>
         </tbody>
       </table>
@@ -52,7 +48,7 @@
         :container-class="'pagination'"
       />
     </div>
-    <ShiftModal v-if="openViewModal" @close="closeModalHandler" />
+    <ShiftModal :id="selected" v-if="showViewModal" @close="closeModalHandler" />
   </div>
 </template>
 
@@ -60,14 +56,13 @@
 import ShiftModal from "../components/ShiftModal";
 
 export default {
-  name: "Staff",
+  name: "Shift",
   data: () => ({
     loading: false,
     page: 1,
     pageSize: 20,
     selected: null,
-    showUpdateModal: false,
-    showCreateModal: false,
+    showViewModal: false,
     dataProvider: {
       currentPage: null,
       records: [],
@@ -88,18 +83,12 @@ export default {
     async setTable() {
       this.loading = true;
 
-      await this.$store.dispatch("fetchCashbox", {
+      await this.$store.dispatch("fetchShift", {
         page: this.page - 1,
         pageSize: this.pageSize
       });
-      this.dataProvider = this.$store.state.order.dataProvider;
-      // this.dataProvider.records = this.dataProvider.records.map(record => {
-      //   return {
-      //     ...record,
-      //     role_label: User.roles[record.role],
-      //     status_label: User.statuses[record.status]
-      //   };
-      // });
+      this.dataProvider = this.$store.state.shift.dataProvider;
+      console.log(this.dataProvider);
 
       this.loading = false;
     },
