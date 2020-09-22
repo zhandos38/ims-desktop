@@ -13,6 +13,7 @@ const routeCustomer = require("./routes/customer");
 const routeOrder = require("./routes/order");
 const routeCashbox = require("./routes/cashbox");
 const routeShift = require("./routes/shift");
+const routeRevision = require("./routes/revision");
 
 const app = express();
 const port = 4040;
@@ -32,6 +33,7 @@ app.use("/customer", routeCustomer);
 app.use("/order", routeOrder);
 app.use("/cashbox", routeCashbox);
 app.use("/shift", routeShift);
+app.use("/revision", routeRevision);
 
 // starting the server
 app.listen(port, () => console.log(`Server started, listening port: ${port}`));

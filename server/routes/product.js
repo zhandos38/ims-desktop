@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { Product } = require("../models/index"),
+  { Product, Revision } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions"),
   { Op } = require("sequelize");
 
@@ -178,7 +178,7 @@ router.post("/set-category", (req, res) => {
 });
 
 router.post("/revision", async (req, res) => {
-  const { products } = req.body;
+  const { user_id, amount, products } = req.body;
 
   try {
     for (product of products) {
@@ -188,6 +188,12 @@ router.post("/revision", async (req, res) => {
         }
       });
     }
+
+    await Revision.create({
+      user_id: user_id,
+      amount: amount,
+      created_at: Date.now() / 1000
+    });
 
     res.status("200").send("Ok");
   } catch (err) {

@@ -10,6 +10,7 @@ import staff from "./staff";
 import order from "./order";
 import cashbox from "./cashbox";
 import shift from "./shift";
+import revision from "./revision";
 
 Vue.use(Vuex);
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
     staff,
     order,
     cashbox,
-    shift
+    shift,
+    revision
   }
 });

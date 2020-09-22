@@ -81,6 +81,11 @@ const routes = [
     component: () => import("@/views/Revision.vue")
   },
   {
+    path: "/revision-create",
+    name: "revision-create",
+    component: () => import("@/views/RevisionCreate.vue")
+  },
+  {
     path: "/shift",
     name: "shift",
     component: () => import("@/views/Shift.vue")

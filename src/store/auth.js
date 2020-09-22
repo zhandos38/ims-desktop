@@ -27,6 +27,7 @@ export default {
   },
   mutations: {
     setUser(state, data) {
+      state.user.id = data.id;
       state.user.username = data.username;
       state.user.balance = data.balance;
 
@@ -39,6 +40,7 @@ export default {
   },
   state: {
     user: {
+      id: null,
       username: null,
       full_name: null,
       role: null,
@@ -47,7 +49,8 @@ export default {
   },
   getters: {
     user: state => {
-      if (!state.user.username && !state.user.bill) {
+      if (!state.user.username && !state.user.bill && !state.user.id) {
+        state.user.id = localStorage.id;
         state.user.username = localStorage.username;
         state.user.balance = localStorage.balance;
       }
