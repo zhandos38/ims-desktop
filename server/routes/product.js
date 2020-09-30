@@ -121,6 +121,32 @@ router.get("/get", (req, res) => {
     });
 });
 
+router.get("/get-all", (req, res) => {
+  Product.findAll()
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/get-by-barcode", (req, res) => {
+  const { barcode } = req.query;
+
+  Product.findAll({
+    where: {
+      barcode: barcode
+    }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
 router.get("/get-by-category", (req, res) => {
   const { id } = req.query;
 

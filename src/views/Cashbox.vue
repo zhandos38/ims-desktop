@@ -70,7 +70,7 @@
 import CashboxModal from "../components/CashboxModal";
 
 export default {
-  name: "Staff",
+  name: "Cashbox",
   data: () => ({
     loading: false,
     page: 1,

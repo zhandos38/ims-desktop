@@ -41,17 +41,17 @@
               </button>
             </td>
             <td>{{ record.number }}</td>
-            <td>{{ record.created_by }}</td>
-            <td>{{ record.customer_id }}</td>
+            <td>{{ record.User ? record.User.full_name : "Не указано" }}</td>
+            <td>{{ record.Customer ? record.Customer.full_name : "Не указано" }}</td>
             <td>{{ record.cost }}</td>
             <td>{{ record.discount_amount }}</td>
             <td>{{ record.cost_total }}</td>
             <td>{{ record.cash_amount }}</td>
             <td>{{ record.card_amount }}</td>
 <!--            <td>{{ record.method }}</td>-->
-            <td>{{ record.pay_status }}</td>
-            <td>{{ record.status }}</td>
-            <td>{{ record.is_debt }}</td>
+            <td>{{ record.pay_method_label }}</td>
+            <td>{{ record.status_label }}</td>
+            <td>{{ record.is_debt_label }}</td>
             <td>{{ record.debt_amount }}</td>
             <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
           </tr>
@@ -66,17 +66,17 @@
         :container-class="'pagination'"
       />
     </div>
-    <!--    <OrderModal-->
-    <!--      v-if="showViewModal"-->
-    <!--      :id="selected"-->
-    <!--      @close="closeModalHandler"-->
-    <!--    />-->
+    <OrderModal
+      v-if="showViewModal"
+      :id="selected"
+      @close="showViewModal = false"
+    />
   </div>
 </template>
 
 <script>
-// import OrderModal from "../components/StaffModal";
-import User from "../utils/user";
+import OrderModal from "../components/OrderModal";
+import Order from "../utils/order";
 
 export default {
   name: "Staff",
@@ -93,9 +93,9 @@ export default {
       totalItems: 0
     }
   }),
-  // components: {
-  //   OrderModal
-  // },
+  components: {
+    OrderModal
+  },
   methods: {
     changePageHandler(page) {
       this.$router.push(`${this.$route.path}?page=${page}`);
@@ -111,23 +111,21 @@ export default {
         pageSize: this.pageSize
       });
       this.dataProvider = this.$store.state.order.dataProvider;
-      // this.dataProvider.records = this.dataProvider.records.map(record => {
-      //   return {
-      //     ...record,
-      //     role_label: User.roles[record.role],
-      //     status_label: User.statuses[record.status]
-      //   };
-      // });
+
+      this.dataProvider.records = this.dataProvider.records.map(record => {
+        return {
+          ...record,
+          pay_method_label: Order.payMethod[record.pay_method],
+          status_label: Order.status[record.status],
+          is_debt_label: record.is_debt ? Order.isDebt[record.is_debt] : "Не указано"
+        };
+      });
 
       this.loading = false;
     },
     openViewModal(id) {
       this.selected = id;
       this.showViewModal = true;
-    },
-    async closeModalHandler() {
-      await this.setTable();
-      this.showViewModal = false;
     }
   },
   async mounted() {

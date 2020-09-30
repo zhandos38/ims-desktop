@@ -72,8 +72,9 @@ router.post("/repayment", async (req, res) => {
       throw "Customer is not found";
     }
 
-    if (customer.debt_sum < sum) {
-      throw "Sum error";
+    if (parseFloat(customer.debt_sum) < parseFloat(sum)) {
+      res.status("200").send("sum_error");
+      return;
     }
 
     const customerDebtHistory = await CustomerDebtHistory.create({

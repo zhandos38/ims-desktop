@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { User, Shift, Cashbox } = require("../models/index"),
+  { User, Shift, Cashbox, CashboxTransactions, Order, CustomerDebtHistory } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -92,6 +92,28 @@ router.get("/get-last", async (req, res) => {
       user_id: id
     },
     order: [["id", "DESC"]]
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/get-report", async (req, res) => {
+  const { id } = req.query;
+
+  Shift.findOne({
+  	include: [
+  		Order,
+  		Cashbox,
+  		CashboxTransactions,
+  		CustomerDebtHistory
+  	],
+    where: {
+      id: id
+    },
   })
     .then(data => {
       res.json(data);

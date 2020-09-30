@@ -10,12 +10,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Order.hasMany(models.OrderItems, {
         foreignKey: {
-          name: 'order_id',
+          name: "order_id",
           allowNull: false
         }
       });
+      Order.belongsTo(models.User, {
+        foreignKey: "created_by"
+      });
       Order.belongsTo(models.Customer, {
-        foreignKey: 'customer_id'
+        foreignKey: "customer_id"
       });
     }
   }

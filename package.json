@@ -30,6 +30,7 @@
     "mysql2": "^2.1.0",
     "pg-hstore": "^2.3.3",
     "popper.js": "^1.16.1",
+    "qz-tray": "^2.1.2",
     "sequelize": "^6.3.1",
     "simple-keyboard": "^2.29.72",
     "v-mask": "^2.2.3",

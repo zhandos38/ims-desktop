@@ -12,6 +12,8 @@ import "vue-toast-notification/dist/theme-default.css";
 import VueNumberInput from "@chenfengyuan/vue-number-input";
 import VueMask from "v-mask";
 import { VueMaskFilter } from "v-mask";
+import Printer from "./plugins/printer";
+import Formatter from "./plugins/formatter";
 
 Vue.config.productionTip = false;
 
@@ -21,6 +23,8 @@ Vue.use(VueMask);
 Vue.use(VueToast, {
   position: "top-right"
 });
+Vue.use(Printer);
+Vue.use(Formatter);
 
 Vue.component("Loader", Loader);
 Vue.component("Paginate", Paginate);

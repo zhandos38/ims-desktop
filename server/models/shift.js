@@ -20,6 +20,24 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       });
+      Shift.hasMany(models.Order, {
+        foreignKey: {
+          name: "shift_id",
+          allowNull: false
+        }
+      });
+      Shift.hasMany(models.CashboxTransactions, {
+        foreignKey: {
+          name: "shift_id",
+          allowNull: false
+        }
+      });
+      Shift.hasMany(models.CustomerDebtHistory, {
+        foreignKey: {
+          name: "shift_id",
+          allowNull: false
+        }
+      });
     }
   }
   Shift.init(
