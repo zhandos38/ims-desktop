@@ -70,38 +70,6 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.post("/set-transaction", async (req, res) => {
-  const dataForm = req.body;
-
-  const cashbox = await Cashbox.findOne({
-    where: {
-      id: dataForm.cashbox_id
-    }
-  });
-
-  if (dataForm.type === "1") {
-    cashbox.balance = parseFloat(cashbox.balance) + parseFloat(dataForm.amount);
-  } else if (dataForm.type === "0") {
-    let amount = parseFloat(cashbox.balance) - parseFloat(dataForm.amount);
-    if (amount < 0) {
-      res.status("200").send("not_enough");
-      return;
-    }
-
-    cashbox.balance = amount;
-  }
-
-  const cashboxTransactions = await CashboxTransactions.create({
-    ...dataForm,
-    created_at: Date.now() / 1000,
-    updated_at: Date.now() / 1000
-  });
-
-  await cashbox.save();
-
-  res.status("200").send("Ok");
-});
-
 router.post("/return", async (req, res) => {
   const { id, comment, products } = req.body;
 

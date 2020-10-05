@@ -50,15 +50,21 @@ export default {
   },
   data: () => ({
     showLoader: true,
-    name: null
+    cashbox_id: null,
+    type: 0,
+    method: 0,
+    comment: null
   }),
   validations: {
-    name: { required }
+    cashbox_id: { required },
+    type: { required },
+    method: { required },
+
   },
   methods: {
     async setForm() {
       const transaction = await (
-        await fetch(`http://localhost:4040/cashbox-transaction/get?id=${this.id}`)
+        await fetch(`http://localhost:4040/cashbox-transactions/get?id=${this.id}`)
       ).json();
 
       this.cashbox = {

@@ -3,23 +3,43 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"
+        <router-link class="btn btn-outline-danger" to="/report"
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
       </div>
       <h2>Отчет по складу</h2>
       <div class="app-container__body">
-        <div class="row">
+        <div class="row justify-content-center">
           <div class="col-md-4">
             <div class="report-item report-item--1">
               <p>Итого наименований на складе</p>
-              123
+              {{ totalCount }}
             </div>
           </div>
-          <div class="col-md-4"></div>
-          <div class="col-md-4"></div>
-          <div class="col-md-4"></div>
-          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <div class="report-item report-item--2">
+              <p>Итого кол-во на складе</p>
+              {{ totalQuantity }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="report-item report-item--3">
+              <p>Общая стоимость склада (Розница)</p>
+              {{ totalRetailCost }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="report-item report-item--4">
+              <p>Общая стоимость склада (Закуп)</p>
+              {{ totalTakeCost }}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="report-item report-item--5">
+              <p>Ориентировочная прибыль</p>
+              {{ totalRetailCost - totalTakeCost }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -31,21 +51,27 @@ export default {
   name: "ProductReport",
   data: () => ({
     loading: false,
-    totalCount: null,
-    totalQuantity: null,
+    totalCount: 0,
+    totalQuantity: 0,
     totalRetailCost: null,
-    totalTakeCost: null,
-    totalExpectedProfit: null
+    totalTakeCost: null
   }),
   methods: {
     async setData() {
       this.loading = true;
 
-      const data = await (
+      const products = await (
         await fetch(`http://localhost:4040/product/get-all`)
       ).json();
 
-      console.log(data);
+      console.log(products);
+
+      this.totalCount = products.length;
+      for (const product of products) {
+        this.totalQuantity += parseFloat(product.quantity);
+        this.totalRetailCost += parseFloat(product.quantity) * parseFloat(product.price_retail);
+        this.totalTakeCost += parseFloat(product.quantity) * parseFloat(product.price_in);
+      }
 
       this.loading = false;
     }

@@ -89,6 +89,11 @@ const routes = [
     path: "/shift",
     name: "shift",
     component: () => import("@/views/Shift.vue")
+  },
+  {
+    path: "/product-report",
+    name: "product-report",
+    component: () => import("@/views/ProductReport.vue")
   }
 ];
 
