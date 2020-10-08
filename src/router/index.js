@@ -99,6 +99,11 @@ const routes = [
     path: "/cashbox-transactions",
     name: "cashbox-transactions",
     component: () => import("@/views/CashboxTransactions.vue")
+  },
+  {
+    path: "/cash",
+    name: "cashbox-transactions",
+    component: () => import("@/views/CashboxTransactions.vue")
   }
 ];
 

@@ -6,13 +6,6 @@
         <router-link class="btn btn-outline-danger" to="/report"
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
-        <button
-          class="btn btn-outline-success"
-          type="button"
-          @click="showCreateModal = true"
-        >
-          Создать <i class="fa fa-plus"></i>
-        </button>
       </div>
       <div>
         <small>Всего записей: {{ dataProvider.totalItems }}</small>
@@ -34,7 +27,7 @@
             <td>
               <button
                 class="btn btn-outline-info"
-                @click="openViewModal(record.id)"
+                @click="openViewModal(record)"
               >
                 <i class="fa fa-eye"></i>
               </button>
@@ -57,11 +50,13 @@
         :container-class="'pagination'"
       />
     </div>
-    <!--        <CashboxModal v-if="openViewModal" @close="closeModalHandler" />-->
+    <CashboxTransactionModal v-if="showModal" :record="selected" @close="showModal = false" />
   </div>
 </template>
 
 <script>
+import CashboxTransactionModal from "../components/CashboxTransactionModal";
+
 export default {
   name: "CashboxTransactions",
   data: () => ({
@@ -77,6 +72,9 @@ export default {
       totalItems: 0
     }
   }),
+  components: {
+    CashboxTransactionModal
+  },
   methods: {
     changePageHandler(page) {
       this.$router.push(`${this.$route.path}?page=${page}`);
@@ -103,8 +101,8 @@ export default {
 
       this.loading = false;
     },
-    openViewModal(id) {
-      this.selected = id;
+    openViewModal(record) {
+      this.selected = record;
       this.showModal = true;
     }
   },

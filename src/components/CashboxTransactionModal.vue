@@ -1,31 +1,39 @@
 <template>
-  <Modal @close="close">
-    <Loader v-if="showLoader" />
-    <div class="row" v-else>
+  <Modal @close="$emit('close')">
+    <div class="row">
       <div class="col-md-12">
-        <div
-          class="form-group"
-          :class="{ 'has-error': $v.name.$dirty && !$v.name.required }"
-        >
-          <label for="supplier-name">Наименвание</label>
-          <input
-            id="supplier-name"
-            class="form-control"
-            type="text"
-            placeholder="Введите наименование"
-            v-model="name"
-          />
-        </div>
-      </div>
-      <div class="col-md-12">
-        <button
-          class="btn btn-success w-100"
-          @click="save"
-          data-target="tooltip"
-          title="Создать категорию"
-        >
-          Сохранить
-        </button>
+        <table class="table table-bordered">
+          <tbody>
+          <tr>
+            <td>Касса:</td>
+            <td>{{ record.Cashbox.name }}</td>
+          </tr>
+          <tr>
+            <td>Пользователь</td>
+            <td>{{ record.User.full_name }}</td>
+          </tr>
+          <tr>
+            <td>Действия</td>
+            <td>{{ record.type ? "Внесение" : "Изъятие" }}</td>
+          </tr>
+          <tr>
+            <td>Сумма</td>
+            <td>{{ record.amount }}</td>
+          </tr>
+          <tr>
+            <td>Смена</td>
+            <td>{{ record.shift_id }}</td>
+          </tr>
+          <tr>
+            <td>Время проведение операции</td>
+            <td>{{ $formatter.date(record.created_at * 1000) }}</td>
+          </tr>
+          <tr>
+            <td>Комментарий:</td>
+            <td>{{ record.comment }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </Modal>
@@ -33,80 +41,18 @@
 
 <script>
 import Modal from "@/components/app/Modal";
-import Loader from "./app/Loader";
-import { required } from "vuelidate/lib/validators";
 
 export default {
   name: "CashboxTransactionsModal",
   components: {
-    Modal,
-    Loader
+    Modal
   },
   props: {
-    id: {
-      type: Number,
-      default: null
+    record: {
+      type: Object
     }
-  },
-  data: () => ({
-    showLoader: true,
-    cashbox_id: null,
-    type: 0,
-    method: 0,
-    comment: null
-  }),
-  validations: {
-    cashbox_id: { required },
-    type: { required },
-    method: { required },
-
-  },
-  methods: {
-    async setForm() {
-      const transaction = await (
-        await fetch(`http://localhost:4040/cashbox-transactions/get?id=${this.id}`)
-      ).json();
-
-      this.cashbox = {
-        cashbox_id: transaction.cashbox_id,
-        type: transaction.type,
-        amount: transaction.amount,
-        method: transaction.method,
-        shift_id: transaction.shift_id,
-        comment: transaction.amount,
-        created_at: transaction.created_at
-      };
-    },
-    async save() {
-      if (this.$v.$invalid) {
-        this.$v.$touch();
-        return;
-      }
-
-      await this.$store.dispatch("createCashboxTransaction", {
-        name: this.name
-      });
-
-      this.close();
-    },
-    close() {
-      this.name = null;
-
-      this.$emit("close");
-    }
-  },
-  async mounted() {
-    if (this.id) {
-      await this.setForm();
-    }
-
-    this.showLoader = false;
   }
 };
 </script>
 
-<style scoped>
-.color-picker {
-  display: block;
-}
-</style>
+<style scoped></style>
