@@ -94,6 +94,11 @@ const routes = [
     path: "/product-report",
     name: "product-report",
     component: () => import("@/views/ProductReport.vue")
+  },
+  {
+    path: "/cashbox-transactions",
+    name: "cashbox-transactions",
+    component: () => import("@/views/CashboxTransactions.vue")
   }
 ];
 

@@ -15,6 +15,7 @@ const routeCashbox = require("./routes/cashbox");
 const routeShift = require("./routes/shift");
 const routeRevision = require("./routes/revision");
 const routeSettings = require("./routes/settings");
+const routeCashboxTransactions = require("./routes/cashboxTransactions");
 
 const app = express();
 const port = 4040;
@@ -36,6 +37,7 @@ app.use("/cashbox", routeCashbox);
 app.use("/shift", routeShift);
 app.use("/revision", routeRevision);
 app.use("/settings", routeSettings);
+app.use("/cashbox-transactions", routeCashboxTransactions);
 
 // starting the server
 app.listen(port, () => console.log(`Server started, listening port: ${port}`));

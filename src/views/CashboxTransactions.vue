@@ -3,7 +3,7 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"
+        <router-link class="btn btn-outline-danger" to="/report"
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
         <button
@@ -21,10 +21,12 @@
         <thead>
           <tr>
             <th>Действия</th>
-            <th>Наименование</th>
-            <th>Статус</th>
-            <th>Дата открытия</th>
-            <th>Дата закрытия</th>
+            <th>Касса</th>
+            <th>Пользователь</th>
+            <th>Действия</th>
+            <th>Сумма</th>
+            <th>Смена</th>
+            <th>Дата операции</th>
           </tr>
         </thead>
         <tbody>
@@ -37,9 +39,12 @@
                 <i class="fa fa-eye"></i>
               </button>
             </td>
-            <td>{{ record.name }}</td>
-            <td>{{ record.balance }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            <td>{{ record.Cashbox.name }}</td>
+            <td>{{ record.User.full_name }}</td>
+            <td>{{ record.type ? "Внесение" : "Изъятие" }}</td>
+            <td>{{ record.amount }}</td>
+            <td>{{ record.shift_id }}</td>
+            <td>{{ $formatter.date(record.created_at * 1000) }}</td>
           </tr>
         </tbody>
       </table>
@@ -57,8 +62,6 @@
 </template>
 
 <script>
-Cas
-
 export default {
   name: "CashboxTransactions",
   data: () => ({
@@ -84,11 +87,12 @@ export default {
     async setTable() {
       this.loading = true;
 
-      await this.$store.dispatch("fetchShift", {
+      await this.$store.dispatch("fetchCashboxTransactions", {
         page: this.page - 1,
         pageSize: this.pageSize
       });
       this.dataProvider = this.$store.state.shift.dataProvider;
+      console.log(this.dataProvider);
       // this.dataProvider.records = this.dataProvider.records.map(record => {
       //   return {
       //     ...record,

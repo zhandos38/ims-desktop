@@ -1,6 +1,6 @@
 const express = require("express"),
   router = express.Router(),
-  { CashboxTransactions, Cashbox } = require("../models/index"),
+  { CashboxTransactions, Cashbox, User, Shift } = require("../models/index"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -9,6 +9,7 @@ router.get("/", (req, res) => {
   const { limit, offset } = getPagination(page, size);
 
   CashboxTransactions.findAndCountAll({
+    include: [User, Cashbox, Shift],
     limit,
     offset,
     order: [["id", "DESC"]]
