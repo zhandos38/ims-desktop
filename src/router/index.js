@@ -101,14 +101,14 @@ const routes = [
     component: () => import("@/views/CashboxTransactions.vue")
   },
   {
-    path: "/cash",
-    name: "cashbox-transactions",
-    component: () => import("@/views/CashboxTransactions.vue")
-  },
-  {
     path: "/date-report",
     name: "date-report",
     component: () => import("@/views/DateReport.vue")
+  },
+  {
+    path: "/return-report",
+    name: "return-report",
+    component: () => import("@/views/ReturnReport.vue")
   }
 ];
 

@@ -1,4 +1,3 @@
-'use strict';
 const {
   Model
 } = require('sequelize');
@@ -15,7 +14,19 @@ module.exports = (sequelize, DataTypes) => {
           name: 'order_return_id',
           allowNull: false
         }
-      })
+      });
+      OrderReturn.belongsTo(models.Order, {
+        foreignKey: {
+          name: 'order_id',
+          allowNull: false
+        }
+      });
+      OrderReturn.belongsTo(models.User, {
+        foreignKey: {
+          name: 'created_by',
+          allowNull: false
+        }
+      });
     }
   };
   OrderReturn.init({
