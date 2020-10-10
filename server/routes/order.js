@@ -11,6 +11,7 @@ const express = require("express"),
     Cashbox,
     CashboxTransactions
   } = require("../models/index"),
+  { Op } = require("sequelize"),
   { getPagination, getPagingData } = require("../functions");
 
 router.get("/", (req, res) => {
@@ -148,6 +149,26 @@ router.get("/get", async (req, res) => {
     include: [User, OrderItems],
     where: {
       id: id
+    }
+  })
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.send("error: " + err);
+    });
+});
+
+router.get("/get-by-date", async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  Order.findAll({
+    include: [OrderItems],
+    where: {
+      created_at: {
+        [Op.gte]: startDate,
+        [Op.lte]: endDate
+      }
     }
   })
     .then(data => {

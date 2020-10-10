@@ -136,3 +136,7 @@ label {
     margin-left: 2.5px;
     margin-right: 2.5px;
 }
+
+.hourselect, .minuteselect {
+    color: #000 !important;
+}
