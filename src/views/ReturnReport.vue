@@ -14,12 +14,8 @@
         <thead>
           <tr>
             <th>Действия</th>
-            <th>Касса</th>
-            <th>Пользователь</th>
-            <th>Действия</th>
-            <th>Сумма</th>
-            <th>Смена</th>
-            <th>Дата операции</th>
+            <th>Время добавление</th>
+            <th>Номер заказа</th>
           </tr>
         </thead>
         <tbody>
@@ -27,17 +23,13 @@
             <td>
               <button
                 class="btn btn-outline-info"
-                @click="openViewModal(record)"
+                @click="openViewModal(record.id)"
               >
                 <i class="fa fa-eye"></i>
               </button>
             </td>
-            <td>{{ record.Cashbox.name }}</td>
-            <td>{{ record.User.full_name }}</td>
-            <td>{{ record.type ? "Внесение" : "Изъятие" }}</td>
-            <td>{{ record.amount }}</td>
-            <td>{{ record.shift_id }}</td>
             <td>{{ $formatter.date(record.created_at * 1000) }}</td>
+            <td>{{ record.Order.number }}</td>
           </tr>
         </tbody>
       </table>
@@ -50,12 +42,12 @@
         :container-class="'pagination'"
       />
     </div>
-    <CashboxTransactionModal v-if="showModal" :record="selected" @close="showModal = false" />
+    <OrderReturnModal v-if="showModal" :id="selected" @close="showModal = false" />
   </div>
 </template>
 
 <script>
-import CashboxTransactionModal from "../components/CashboxTransactionModal";
+import OrderReturnModal from "../components/OrderReturnModal";
 
 export default {
   name: "CashboxTransactions",
@@ -73,7 +65,7 @@ export default {
     }
   }),
   components: {
-    CashboxTransactionModal
+    OrderReturnModal
   },
   methods: {
     changePageHandler(page) {
@@ -85,7 +77,7 @@ export default {
     async setTable() {
       this.loading = true;
 
-      await this.$store.dispatch("fetchCashboxTransactions", {
+      await this.$store.dispatch("fetchOrderReturn", {
         page: this.page - 1,
         pageSize: this.pageSize
       });
@@ -101,8 +93,8 @@ export default {
 
       this.loading = false;
     },
-    openViewModal(record) {
-      this.selected = record;
+    openViewModal(id) {
+      this.selected = id;
       this.showModal = true;
     }
   },

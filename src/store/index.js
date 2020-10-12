@@ -12,6 +12,7 @@ import cashbox from "./cashbox";
 import shift from "./shift";
 import revision from "./revision";
 import cashboxTransactions from "./cashboxTransaction";
+import orderReturn from "./orderReturn";
 
 Vue.use(Vuex);
 
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     cashbox,
     shift,
     revision,
-    cashboxTransactions
+    cashboxTransactions,
+    orderReturn
   }
 });

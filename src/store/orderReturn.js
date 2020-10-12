@@ -2,19 +2,19 @@ import axios from "axios";
 
 export default {
   actions: {
-    async fetchOrderReturn({ commit }, { page = 0, pageSize = 20 }) {
+    async fetchCashboxTransactions({ commit }, { page = 0, pageSize = 20 }) {
       const data = await (
         await fetch(
-          `http://localhost:4040/order-return/?page=${page}&size=${pageSize}`
+          `http://localhost:4040/cashbox-transactions/?page=${page}&size=${pageSize}`
         )
       ).json();
 
       commit("setDataProvider", data);
     },
-    async createOrderReturn({ dispatch, commit }, dataForm) {
+    async createCashboxTransactions({ dispatch, commit }, dataForm) {
       try {
         await axios
-          .post("http://localhost:4040/order-return/create", dataForm)
+          .post("http://localhost:4040/cashbox-transactions/create", dataForm)
           .then(async response => {
             this._vm.$toast.open("Смена успешно открыта");
           })
@@ -28,12 +28,12 @@ export default {
         throw e;
       }
     },
-    async getOrderReturn({ commit }, id) {
+    async getCashboxTransactions({ commit }, id) {
       try {
         await axios
-          .get(`http://localhost:4040/order-return/get?id=${id}`)
+          .get(`http://localhost:4040/cashbox-transactions/get?id=${id}`)
           .then(async response => {
-            commit("setOrderReturn", response);
+            commit("setCashboxTransaction", response);
           })
           .catch(error => {
             this._vm.$toast.open(
@@ -50,12 +50,12 @@ export default {
     setDataProvider(state, data) {
       state.dataProvider = data;
     },
-    setOrderReturn(state, data) {
-      state.orderReturn = data;
+    setShift(state, data) {
+      state.shift = data;
     }
   },
   state: {
     dataProvider: null,
-    orderReturn: null
+    shift: null
   }
 };
