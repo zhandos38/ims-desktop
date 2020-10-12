@@ -71,6 +71,7 @@ app.on("ready", async () => {
     }
   }
   createWindow();
+  require("update-electron-app")();
 });
 
 // Exit cleanly on request from parent process in development mode.

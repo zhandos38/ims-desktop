@@ -52,7 +52,7 @@
                 maintainAspectRatio: false
               }"
             ></chart>
-            <table class="table table-bordered">
+            <table class="table table-bordered" v-if="groupedOrders.length > 0">
               <thead>
                 <tr>
                   <th>Дата</th>

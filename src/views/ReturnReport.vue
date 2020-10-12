@@ -7,42 +7,53 @@
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.length > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Действия</th>
+              <th>Время добавление</th>
+              <th>Номер заказа</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="record in dataProvider.records" v-bind:key="record.id">
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openViewModal(record.id)"
+                >
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+              <td>{{ $formatter.date(record.created_at * 1000) }}</td>
+              <td>{{ record.Order.number }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Действия</th>
-            <th>Время добавление</th>
-            <th>Номер заказа</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="record in dataProvider.records" v-bind:key="record.id">
-            <td>
-              <button
-                class="btn btn-outline-info"
-                @click="openViewModal(record.id)"
-              >
-                <i class="fa fa-eye"></i>
-              </button>
-            </td>
-            <td>{{ $formatter.date(record.created_at * 1000) }}</td>
-            <td>{{ record.Order.number }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
-    <OrderReturnModal v-if="showModal" :id="selected" @close="showModal = false" />
+    <OrderReturnModal
+      v-if="showModal"
+      :id="selected"
+      @close="showModal = false"
+    />
   </div>
 </template>
 

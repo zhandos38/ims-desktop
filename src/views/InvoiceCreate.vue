@@ -17,8 +17,6 @@
                     type="text"
                     v-model="number"
                     class="form-control"
-                    @input="onInputChange"
-                    data-layout="russian"
                   />
                 </div>
               </div>
