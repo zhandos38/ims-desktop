@@ -71,7 +71,12 @@ app.on("ready", async () => {
     }
   }
   createWindow();
-  require("update-electron-app")();
+
+  require("update-electron-app")({
+    repo: "zhandos38/ims-desktop",
+    updateInterval: "1 hour",
+    logger: require("electron-log")
+  });
 });
 
 // Exit cleanly on request from parent process in development mode.
