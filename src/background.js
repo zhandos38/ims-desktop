@@ -74,8 +74,7 @@ app.on("ready", async () => {
 
   require("update-electron-app")({
     repo: "zhandos38/ims-desktop",
-    updateInterval: "1 hour",
-    logger: require("electron-log")
+    updateInterval: "5 minutes"
   });
 });
 

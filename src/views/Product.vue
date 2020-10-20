@@ -37,7 +37,7 @@
             <td>{{ (page - 1) * pageSize + ++index }}</td>
             <td>
               <button class="btn btn-outline-info" @click="openProductEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button>
-              <button class="btn btn-outline-info ml-2" @click="printBarcode(record"><i class="fa fa-print"></i></button>
+              <button class="btn btn-outline-info ml-2"><i class="fa fa-print"></i></button>
             </td>
             <td>{{ record.barcode }}</td>
             <td>{{ record.name }}</td>
@@ -69,7 +69,6 @@
 
 <script>
 import ProductModal from "../components/ProductModal";
-import JsBarcode from "jsbarcode";
 
 export default {
   name: "Invoice",
@@ -131,9 +130,6 @@ export default {
     openProductEditModal(id) {
       this.selectedProduct = id;
       this.showProductEditModal = true;
-    },
-    printBarcode(product) {
-
     }
   },
   async mounted() {
