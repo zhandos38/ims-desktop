@@ -10,38 +10,45 @@
           Создать <i class="fa fa-plus"></i>
         </router-link>
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Пользватель</th>
+              <th>Сумма потерь</th>
+              <th>Время проведения</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(record, index) in dataProvider.records"
+              v-bind:key="record.id"
+            >
+              <td>{{ (page - 1) * pageSize + ++index }}</td>
+              <td>{{ record.User.full_name }}</td>
+              <td>{{ record.amount }}</td>
+              <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Пользватель</th>
-            <th>Сумма потерь</th>
-            <th>Время проведения</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(record, index) in dataProvider.records"
-            v-bind:key="record.id"
-          >
-            <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td>{{ record.User.full_name }}</td>
-            <td>{{ record.amount }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
   </div>
 </template>

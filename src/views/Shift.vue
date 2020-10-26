@@ -7,48 +7,59 @@
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Действия</th>
+              <th>Кассир</th>
+              <th>Касса</th>
+              <th>Статус</th>
+              <th>Время открытия</th>
+              <th>Время закрытия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="record in dataProvider.records" v-bind:key="record.id">
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openViewModal(record.id)"
+                >
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+              <td>{{ record.User.full_name }}</td>
+              <td>{{ record.Cashbox.name }}</td>
+              <td>{{ record.status ? "Включен" : "Отключен" }}</td>
+              <td>{{ new Date(record.opened_at * 1000).toLocaleString() }}</td>
+              <td>{{ new Date(record.closed_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Действия</th>
-            <th>Кассир</th>
-            <th>Касса</th>
-            <th>Статус</th>
-            <th>Время открытия</th>
-            <th>Время закрытия</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="record in dataProvider.records" v-bind:key="record.id">
-            <td>
-              <button
-                class="btn btn-outline-info"
-                @click="openViewModal(record.id)"
-              >
-                <i class="fa fa-eye"></i>
-              </button>
-            </td>
-            <td>{{ record.User.full_name }}</td>
-            <td>{{ record.Cashbox.name }}</td>
-            <td>{{ record.status ? "Включен" : "Отключен" }}</td>
-            <td>{{ new Date(record.opened_at * 1000).toLocaleString() }}</td>
-            <td>{{ new Date(record.closed_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
-    <ShiftModal :id="selected" v-if="showViewModal" @close="closeModalHandler" />
+    <ShiftModal
+      :id="selected"
+      v-if="showViewModal"
+      @close="closeModalHandler"
+    />
   </div>
 </template>
 

@@ -14,50 +14,57 @@
           Создать <i class="fa fa-plus"></i>
         </button>
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Действия</th>
+              <th>Полное имя</th>
+              <th>Номер телефона</th>
+              <th>Время создание</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(record, index) in dataProvider.records"
+              v-bind:key="record.id"
+            >
+              <td>{{ (page - 1) * pageSize + ++index }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openEditModal(record.id)"
+                >
+                  <i class="fa fa-pencil-alt"></i>
+                </button>
+              </td>
+              <td>{{ record.full_name }}</td>
+              <td v-if="record.phone">
+                {{ record.phone | VMask("7(###)###-##-##") }}
+              </td>
+              <td v-else>Не указано</td>
+              <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Действия</th>
-            <th>Полное имя</th>
-            <th>Номер телефона</th>
-            <th>Время создание</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(record, index) in dataProvider.records"
-            v-bind:key="record.id"
-          >
-            <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td>
-              <button
-                class="btn btn-outline-info"
-                @click="openEditModal(record.id)"
-              >
-                <i class="fa fa-pencil-alt"></i>
-              </button>
-            </td>
-            <td>{{ record.full_name }}</td>
-            <td v-if="record.phone">
-              {{ record.phone | VMask("7(###)###-##-##") }}
-            </td>
-            <td v-else>Не указано</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
     <CustomerModal v-if="showCreateModal" @close="closeModalHandler" />
     <CustomerModal

@@ -7,64 +7,73 @@
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Действия</th>
+              <th>Номер чека</th>
+              <th>Создал</th>
+              <th>Клиент</th>
+              <th>Сумма по чеку</th>
+              <th>Сумма по чеку со скидкой</th>
+              <th>Сумма скидки</th>
+              <th>Оплачено наличкой</th>
+              <th>Оплачено картой</th>
+              <!--            <th>Метод оплаты</th>-->
+              <th>Тип оплаты</th>
+              <th>Статус</th>
+              <th>В долг</th>
+              <th>Сумма долга</th>
+              <th>Дата создания</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="record in dataProvider.records" v-bind:key="record.id">
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openViewModal(record.id)"
+                >
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+              <td>{{ record.number }}</td>
+              <td>{{ record.User ? record.User.full_name : "Не указано" }}</td>
+              <td>
+                {{ record.Customer ? record.Customer.full_name : "Не указано" }}
+              </td>
+              <td>{{ record.cost }}</td>
+              <td>{{ record.discount_amount }}</td>
+              <td>{{ record.cost_total }}</td>
+              <td>{{ record.cash_amount }}</td>
+              <td>{{ record.card_amount }}</td>
+              <!--            <td>{{ record.method }}</td>-->
+              <td>{{ record.pay_method_label }}</td>
+              <td>{{ record.status_label }}</td>
+              <td>{{ record.is_debt_label }}</td>
+              <td>{{ record.debt_amount }}</td>
+              <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Действия</th>
-            <th>Номер чека</th>
-            <th>Создал</th>
-            <th>Клиент</th>
-            <th>Сумма по чеку</th>
-            <th>Сумма по чеку со скидкой</th>
-            <th>Сумма скидки</th>
-            <th>Оплачено наличкой</th>
-            <th>Оплачено картой</th>
-<!--            <th>Метод оплаты</th>-->
-            <th>Тип оплаты</th>
-            <th>Статус</th>
-            <th>В долг</th>
-            <th>Сумма долга</th>
-            <th>Дата создания</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="record in dataProvider.records" v-bind:key="record.id">
-            <td>
-              <button
-                class="btn btn-outline-info"
-                @click="openViewModal(record.id)"
-              >
-                <i class="fa fa-eye"></i>
-              </button>
-            </td>
-            <td>{{ record.number }}</td>
-            <td>{{ record.User ? record.User.full_name : "Не указано" }}</td>
-            <td>{{ record.Customer ? record.Customer.full_name : "Не указано" }}</td>
-            <td>{{ record.cost }}</td>
-            <td>{{ record.discount_amount }}</td>
-            <td>{{ record.cost_total }}</td>
-            <td>{{ record.cash_amount }}</td>
-            <td>{{ record.card_amount }}</td>
-<!--            <td>{{ record.method }}</td>-->
-            <td>{{ record.pay_method_label }}</td>
-            <td>{{ record.status_label }}</td>
-            <td>{{ record.is_debt_label }}</td>
-            <td>{{ record.debt_amount }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
     <OrderModal
       v-if="showViewModal"
@@ -117,7 +126,9 @@ export default {
           ...record,
           pay_method_label: Order.payMethod[record.pay_method],
           status_label: Order.status[record.status],
-          is_debt_label: record.is_debt ? Order.isDebt[record.is_debt] : "Не указано"
+          is_debt_label: record.is_debt
+            ? Order.isDebt[record.is_debt]
+            : "Не указано"
         };
       });
 

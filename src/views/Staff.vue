@@ -3,7 +3,9 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <router-link class="btn btn-outline-danger" to="/"
+          ><i class="fa fa-arrow-left"></i> Назад</router-link
+        >
         <button
           class="btn btn-outline-success"
           type="button"
@@ -12,47 +14,58 @@
           Создать <i class="fa fa-plus"></i>
         </button>
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Действия</th>
+              <th>Ф.И.О</th>
+              <th>Роль</th>
+              <th>Статус</th>
+              <th>Время создание</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(record, index) in dataProvider.records"
+              v-bind:key="record.id"
+            >
+              <td>{{ (page - 1) * pageSize + ++index }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openEditModal(record.id)"
+                >
+                  <i class="fa fa-pencil-alt"></i>
+                </button>
+              </td>
+              <td>{{ record.full_name }}</td>
+              <td>{{ record.role_label }}</td>
+              <td>{{ record.status_label }}</td>
+              <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Действия</th>
-            <th>Ф.И.О</th>
-            <th>Роль</th>
-            <th>Статус</th>
-            <th>Время создание</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(record, index) in dataProvider.records"
-            v-bind:key="record.id"
-          >
-            <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td><button class="btn btn-outline-info" @click="openEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button></td>
-            <td>{{ record.full_name }}</td>
-            <td>{{ record.role_label }}</td>
-            <td>{{ record.status_label }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
-    <StaffModal
-      v-if="showCreateModal"
-      @close="closeModalHandler"
-    />
+    <StaffModal v-if="showCreateModal" @close="closeModalHandler" />
     <StaffModal
       v-if="showUpdateModal"
       :id="selected"

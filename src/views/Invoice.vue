@@ -3,49 +3,58 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
+        <router-link class="btn btn-outline-danger" to="/"
+          ><i class="fa fa-arrow-left"></i> Назад</router-link
+        >
         <router-link class="btn btn-outline-success" to="/invoice-create">
           Создать <i class="fa fa-plus"></i>
         </router-link>
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Номер входа</th>
+              <th>Поставщик</th>
+              <th>Под реал</th>
+              <th>Статус</th>
+              <th>Стоимость</th>
+              <th>Время создания</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(record, index) in dataProvider.records"
+              v-bind:key="record.id"
+            >
+              <td>{{ (page - 1) * pageSize + ++index }}</td>
+              <td>{{ record.number_in }}</td>
+              <td>{{ record.supplier_name }}</td>
+              <td>{{ record.is_debt ? "Да" : "Нет" }}</td>
+              <td>{{ record.status_label }}</td>
+              <td>{{ record.cost }}</td>
+              <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Номер входа</th>
-            <th>Поставщик</th>
-            <th>Под реал</th>
-            <th>Статус</th>
-            <th>Стоимость</th>
-            <th>Время создания</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(record, index) in dataProvider.records"
-            v-bind:key="record.id"
-          >
-            <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td>{{ record.number_in }}</td>
-            <td>{{ record.supplier_name }}</td>
-            <td>{{ record.is_debt ? "Да" : "Нет" }}</td>
-            <td>{{ record.status_label }}</td>
-            <td>{{ record.cost }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
   </div>
 </template>

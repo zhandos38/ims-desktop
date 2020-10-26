@@ -3,67 +3,93 @@
     <Loader v-if="loading" />
     <div class="app-container" v-else>
       <div class="app-container__header">
-        <router-link class="btn btn-outline-danger" to="/"><i class="fa fa-arrow-left"></i> Назад</router-link>
-        <button class="btn btn-outline-success" @click="showProductCreateModal = true">
+        <router-link class="btn btn-outline-danger" to="/"
+          ><i class="fa fa-arrow-left"></i> Назад</router-link
+        >
+        <button
+          class="btn btn-outline-success"
+          @click="showProductCreateModal = true"
+        >
           Создать <i class="fa fa-plus"></i>
         </button>
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Действия</th>
+              <th>Штрихкод</th>
+              <th>Наименование товара</th>
+              <th>Ед/изм.</th>
+              <th>Цена розничная</th>
+              <th>Цена оптовая</th>
+              <th>Оптовое количество</th>
+              <th>Категория</th>
+              <th>Тип</th>
+              <th>Остаток на складе</th>
+              <th>Статус</th>
+              <th>Время добавление</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(record, index) in dataProvider.records"
+              v-bind:key="record.id"
+            >
+              <td>{{ (page - 1) * pageSize + ++index }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openProductEditModal(record.id)"
+                >
+                  <i class="fa fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-outline-info ml-2">
+                  <i class="fa fa-print"></i>
+                </button>
+              </td>
+              <td>{{ record.barcode }}</td>
+              <td>{{ record.name }}</td>
+              <td>{{ record.unit }}</td>
+              <td>{{ record.price_retail }}</td>
+              <td>{{ record.price_wholesale }}</td>
+              <td>{{ record.wholesale_value }}</td>
+              <td>{{ record.category_name }}</td>
+              <td>{{ record.type ? "Да" : "Нет" }}</td>
+              <td>{{ record.quantity }}</td>
+              <td>{{ record.status ? "Да" : "Нет" }}</td>
+              <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Действия</th>
-            <th>Штрихкод</th>
-            <th>Наименование товара</th>
-            <th>Ед/изм.</th>
-            <th>Цена розничная</th>
-            <th>Цена оптовая</th>
-            <th>Оптовое количество</th>
-            <th>Категория</th>
-            <th>Тип</th>
-            <th>Остаток на складе</th>
-            <th>Статус</th>
-            <th>Время добавление</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(record, index) in dataProvider.records"
-            v-bind:key="record.id"
-          >
-            <td>{{ (page - 1) * pageSize + ++index }}</td>
-            <td>
-              <button class="btn btn-outline-info" @click="openProductEditModal(record.id)"><i class="fa fa-pencil-alt"></i></button>
-              <button class="btn btn-outline-info ml-2"><i class="fa fa-print"></i></button>
-            </td>
-            <td>{{ record.barcode }}</td>
-            <td>{{ record.name }}</td>
-            <td>{{ record.unit }}</td>
-            <td>{{ record.price_retail }}</td>
-            <td>{{ record.price_wholesale }}</td>
-            <td>{{ record.wholesale_value }}</td>
-            <td>{{ record.category_name }}</td>
-            <td>{{ record.type ? "Да" : "Нет" }}</td>
-            <td>{{ record.quantity }}</td>
-            <td>{{ record.status ? "Да" : "Нет" }}</td>
-            <td>{{ new Date(record.created_at * 1000).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
-    <ProductModal v-if="showProductCreateModal" @close="handleProductCreateModalClose" />
-    <ProductModal v-if="showProductEditModal" :id="selectedProduct" @close="showProductEditModal = false" />
+    <ProductModal
+      v-if="showProductCreateModal"
+      @close="handleProductCreateModalClose"
+    />
+    <ProductModal
+      v-if="showProductEditModal"
+      :id="selectedProduct"
+      @close="showProductEditModal = false"
+    />
   </div>
 </template>
 

@@ -7,50 +7,61 @@
           ><i class="fa fa-arrow-left"></i> Назад</router-link
         >
       </div>
-      <div>
-        <small>Всего записей: {{ dataProvider.totalItems }}</small>
+      <div v-if="dataProvider.totalItems > 0">
+        <div>
+          <small>Всего записей: {{ dataProvider.totalItems }}</small>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Действия</th>
+              <th>Касса</th>
+              <th>Пользователь</th>
+              <th>Действия</th>
+              <th>Сумма</th>
+              <th>Смена</th>
+              <th>Дата операции</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="record in dataProvider.records" v-bind:key="record.id">
+              <td>
+                <button
+                  class="btn btn-outline-info"
+                  @click="openViewModal(record)"
+                >
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+              <td>{{ record.Cashbox.name }}</td>
+              <td>{{ record.User.full_name }}</td>
+              <td>{{ record.type ? "Внесение" : "Изъятие" }}</td>
+              <td>{{ record.amount }}</td>
+              <td>{{ record.shift_id }}</td>
+              <td>{{ $formatter.date(record.created_at * 1000) }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Paginate
+          v-model="page"
+          :page-count="dataProvider.totalPages"
+          :click-handler="changePageHandler"
+          :prev-text="'«'"
+          :next-text="'»'"
+          :container-class="'pagination'"
+        />
       </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Действия</th>
-            <th>Касса</th>
-            <th>Пользователь</th>
-            <th>Действия</th>
-            <th>Сумма</th>
-            <th>Смена</th>
-            <th>Дата операции</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="record in dataProvider.records" v-bind:key="record.id">
-            <td>
-              <button
-                class="btn btn-outline-info"
-                @click="openViewModal(record)"
-              >
-                <i class="fa fa-eye"></i>
-              </button>
-            </td>
-            <td>{{ record.Cashbox.name }}</td>
-            <td>{{ record.User.full_name }}</td>
-            <td>{{ record.type ? "Внесение" : "Изъятие" }}</td>
-            <td>{{ record.amount }}</td>
-            <td>{{ record.shift_id }}</td>
-            <td>{{ $formatter.date(record.created_at * 1000) }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Paginate
-        v-model="page"
-        :page-count="dataProvider.totalPages"
-        :click-handler="changePageHandler"
-        :prev-text="'«'"
-        :next-text="'»'"
-        :container-class="'pagination'"
-      />
+      <div v-else>
+        <p class="text-center">
+          Данные отсутствуют
+        </p>
+      </div>
     </div>
-    <CashboxTransactionModal v-if="showModal" :record="selected" @close="showModal = false" />
+    <CashboxTransactionModal
+      v-if="showModal"
+      :record="selected"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
