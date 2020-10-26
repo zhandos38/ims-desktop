@@ -4,6 +4,7 @@ import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
+import { autoUpdater } from "electron-updater";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -34,6 +35,7 @@ function createWindow() {
     createProtocol("app");
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
+    autoUpdater.checkForUpdatesAndNotify();
   }
 
   win.on("closed", () => {
@@ -71,11 +73,6 @@ app.on("ready", async () => {
     }
   }
   createWindow();
-
-  require("update-electron-app")({
-    repo: "zhandos38/ims-desktop",
-    updateInterval: "5 minutes"
-  });
 });
 
 // Exit cleanly on request from parent process in development mode.

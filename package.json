@@ -1,7 +1,7 @@
 {
   "name": "ims",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.2",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -24,6 +24,7 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
+    "electron-updater": "^4.3.5",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
     "js-scanner-detection": "^1.0.3",
@@ -35,7 +36,6 @@
     "qz-tray": "^2.1.2",
     "sequelize": "^6.3.1",
     "simple-keyboard": "^2.30.44",
-    "update-electron-app": "^2.0.1",
     "v-mask": "^2.2.3",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
