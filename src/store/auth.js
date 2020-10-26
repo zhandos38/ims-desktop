@@ -56,6 +56,13 @@ export default {
       }
 
       return state.user;
+    },
+    isLoggedIn: state => {
+      if (!state.user.id) {
+        state.user.id = localStorage.id;
+      }
+
+      return state.user.id;
     }
   }
 };

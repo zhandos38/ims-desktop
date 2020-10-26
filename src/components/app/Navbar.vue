@@ -50,7 +50,6 @@ export default {
     }, 1000);
 
     this.user = this.$store.getters.user;
-    console.log(this.user);
   },
   beforeDestroy() {
     clearInterval(this.interval);
