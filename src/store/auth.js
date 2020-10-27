@@ -2,13 +2,14 @@ import axios from "axios";
 
 export default {
   actions: {
-    async login({ dispatch, commit }, { username, password }) {
+    async login({ dispatch, commit }, { username, password, token }) {
 
       try {
         await axios
           .post("http://localhost:4040/user/login", {
             username: username,
-            password: password
+            password: password,
+            token: token
           })
           .then(function(response) {
             commit("setUser", response.data);
@@ -49,10 +50,9 @@ export default {
   },
   getters: {
     user: state => {
-      if (!state.user.username && !state.user.bill && !state.user.id) {
+      if (!state.user.username || !state.user.id) {
         state.user.id = localStorage.id;
         state.user.username = localStorage.username;
-        state.user.balance = localStorage.balance;
       }
 
       return state.user;

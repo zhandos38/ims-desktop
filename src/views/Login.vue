@@ -42,23 +42,18 @@
             >Пароль должен состоять как минимум из 6 символов</small
           >
         </div>
-
-        <!--                <div class="text-left">-->
-        <!--                    <div class="form-group">-->
-        <!--                        <input type="checkbox" id="remember-me" name="rememberMe">-->
-        <!--                        <label for="remember-me">Запомни меня?</label>-->
-        <!--                    </div>-->
-        <!--                </div>-->
+        <div class="form-group" v-if="showToken">
+          <input
+            class="form-control"
+            type="text"
+            id="token"
+            name="token"
+            v-model.trim="token"
+            placeholder="Введите токен"
+          />
+        </div>
         <div class="form-group">
           <button class="site-login__button" type="submit">Войти</button>
-        </div>
-        <div class="form-group">
-          <router-link class="site-login__button" to="/signup"
-            >Регистрация</router-link
-          >
-        </div>
-        <div class="form-group" style="margin-bottom: 30px">
-          <a class="site-login__button" href="#">Забыли пароль?</a>
         </div>
       </form>
     </div>
@@ -72,7 +67,9 @@ export default {
   name: "Login",
   data: () => ({
     username: null,
-    password: null
+    password: null,
+    token: null,
+    showToken: true
   }),
   validations: {
     username: { required },
@@ -87,7 +84,8 @@ export default {
 
       let userData = {
         username: this.username,
-        password: this.password
+        password: this.password,
+        token: this.token
       };
 
       try {
@@ -98,10 +96,23 @@ export default {
       }
 
       await this.$router.push("/?message=login");
+    },
+    async check() {
+      const result = await (
+        await fetch(`http://localhost:4040/user/check`)
+      ).json();
+
+      if (!result) {
+        this.showToken = true;
+      }
     }
   },
-  mounted() {
-    console.log(this.$store.state.auth.username);
+  async mounted() {
+    if (this.$store.getters.user.id) {
+      await this.$router.push("/?message=login");
+    }
+
+    await this.check();
   }
 };
 </script>
