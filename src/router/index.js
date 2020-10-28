@@ -168,6 +168,14 @@ const routes = [
       requiresAuth: true
     },
     component: () => import("@/views/ReturnReport.vue")
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    meta: {
+      requiresAuth: true
+    },
+    component: () => import("@/views/Settings.vue")
   }
 ];
 

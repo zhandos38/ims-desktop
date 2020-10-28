@@ -53,8 +53,8 @@ export default {
     loading: false,
     totalCount: 0,
     totalQuantity: 0,
-    totalRetailCost: null,
-    totalTakeCost: null
+    totalRetailCost: 0,
+    totalTakeCost: 0
   }),
   methods: {
     async setData() {

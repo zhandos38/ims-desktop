@@ -62,6 +62,7 @@
 
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
+import store from "../store";
 
 export default {
   name: "Login",
@@ -69,7 +70,7 @@ export default {
     username: null,
     password: null,
     token: null,
-    showToken: true
+    showToken: false
   }),
   validations: {
     username: { required },
@@ -79,6 +80,13 @@ export default {
     async submitHandler() {
       if (this.$v.$invalid) {
         this.$v.$touch();
+        return;
+      }
+
+      await this.$store.dispatch("getSettings");
+
+      if (this.checkExpireDate()) {
+        this.$toast.error("Истек срок лицензии");
         return;
       }
 
@@ -105,6 +113,11 @@ export default {
       if (!result) {
         this.showToken = true;
       }
+    },
+    checkExpireDate() {
+      const date = new Date();
+      const expireDate = new Date(this.$store.getters.getExpireDate);
+      return date > expireDate;
     }
   },
   async mounted() {
