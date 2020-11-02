@@ -10,6 +10,8 @@
 import AuthLayout from "@/layouts/AuthLayout";
 import MainLayout from "@/layouts/MainLayout";
 import FullLayout from "@/layouts/FullLayout";
+import store from "./store";
+import Vue from "vue";
 
 export default {
   computed: {
@@ -21,6 +23,16 @@ export default {
     AuthLayout,
     MainLayout,
     FullLayout
+  },
+  mounted() {
+    const interval = setInterval(function() {
+      const date = new Date();
+      const expireDate = new Date(store.getters.getExpireDate);
+      expireDate.setDate(expireDate.getDate() - 3);
+      if (date >= expireDate) {
+        Vue.$toast.error("Срок лицензии истекает, пожалуйста продлите");
+      }
+    }, 5000);
   }
 };
 </script>

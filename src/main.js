@@ -34,16 +34,6 @@ Vue.filter("VMask", VueMaskFilter);
 Vue.filter("number", value => value.toFixed(2));
 
 router.beforeEach((to, from, next) => {
-
-  const interval = setInterval(function() {
-    const date = new Date();
-    const expireDate = new Date(store.getters.getExpireDate);
-    expireDate.setDate(expireDate.getDate() - 3);
-    if (date >= expireDate) {
-      Vue.$toast.error("Срок лицензии истекает, пожалуйста продлите");
-    }
-  }, 5000);
-
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.

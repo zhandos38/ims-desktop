@@ -30,12 +30,12 @@ export default {
     setUser(state, data) {
       state.user.id = data.id;
       state.user.username = data.username;
-      state.user.balance = data.balance;
 
+      localStorage.id = state.user.id;
       localStorage.username = state.user.username;
-      localStorage.balance = state.user.balance;
     },
     unsetUser(state) {
+      localStorage.clear();
       state.user = {};
     }
   },
