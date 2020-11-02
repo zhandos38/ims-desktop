@@ -23,16 +23,6 @@ export default {
     AuthLayout,
     MainLayout,
     FullLayout
-  },
-  mounted() {
-    const interval = setInterval(function() {
-      const date = new Date();
-      const expireDate = new Date(store.getters.getExpireDate);
-      expireDate.setDate(expireDate.getDate() - 3);
-      if (date >= expireDate) {
-        Vue.$toast.error("Срок лицензии истекает, пожалуйста продлите");
-      }
-    }, 5000);
   }
 };
 </script>

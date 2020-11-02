@@ -29,11 +29,15 @@
 </template>
 
 <script>
+import store from "../../store";
+import Vue from "vue";
+
 export default {
   name: "Navbar",
   data: () => ({
     date: new Date(),
     interval: null,
+    expireDateInterval: null,
     user: {
       username: null
     }
@@ -51,10 +55,21 @@ export default {
       this.date = new Date();
     }, 1000);
 
+    this.expireDateInterval = setInterval(function() {
+      const date = new Date();
+      const expireDate = new Date(store.getters.getExpireDate);
+
+      expireDate.setDate(expireDate.getDate() - 3);
+      if (date >= expireDate) {
+        Vue.$toast.error("Срок лицензии истекает, пожалуйста продлите");
+      }
+    }, 5000);
+
     this.user = this.$store.getters.user;
   },
   beforeDestroy() {
     clearInterval(this.interval);
+    clearInterval(this.expireDateInterval);
   }
 };
 </script>
