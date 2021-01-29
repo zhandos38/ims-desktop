@@ -85,6 +85,10 @@ export default {
 
       await this.$store.dispatch("getSettings");
 
+      await this.$store.dispatch("updateExpireDate", {
+        token: this.$store.getters.token
+      });
+
       if (this.checkExpireDate()) {
         this.$toast.error("Истек срок лицензии");
         return;
